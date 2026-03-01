@@ -3,6 +3,26 @@
   "WorkspaceRootPath": "D:\\WinApp Samsung Project\\device_management\\App1\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\infrastructure\\instanceslotmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:infrastructure\\instanceslotmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\infrastructure\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:infrastructure\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\presentation\\views\\mydevicepage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:presentation\\views\\mydevicepage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -33,10 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\presentation\\viewmodels\\mydeviceviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:presentation\\viewmodels\\mydeviceviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\infrastructure\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:infrastructure\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\domain\\valueobjects\\queryparameters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -87,18 +103,6 @@
       "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:data\\datasources\\sqlitedatasource.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:app.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|d:\\winapp samsung project\\device_management\\app1\\mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{4AAA6772-0D33-41CB-8CF0-EAD3800B1DE4}|App1.csproj|solutionrelative:mainwindow.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -110,7 +114,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -118,33 +122,33 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "MyDevicePage.xaml.cs",
-              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\MyDevicePage.xaml.cs",
-              "RelativeDocumentMoniker": "Presentation\\Views\\MyDevicePage.xaml.cs",
-              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\MyDevicePage.xaml.cs",
-              "RelativeToolTip": "Presentation\\Views\\MyDevicePage.xaml.cs",
-              "ViewState": "AgIAAIIAAAAAAAAAAAAIwAwAAAAiAAAAAAAAAA==",
+              "DocumentIndex": 3,
+              "Title": "InstanceSlotManager.cs",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Infrastructure\\InstanceSlotManager.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\InstanceSlotManager.cs",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Infrastructure\\InstanceSlotManager.cs",
+              "RelativeToolTip": "Infrastructure\\InstanceSlotManager.cs",
+              "ViewState": "AgIAAE4AAAAAAAAAAAAYwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T09:09:00.645Z",
+              "WhenOpened": "2026-03-01T10:43:27.359Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "RequestDevicePage.xaml.cs",
-              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\RequestDevicePage.xaml.cs",
-              "RelativeDocumentMoniker": "Presentation\\Views\\RequestDevicePage.xaml.cs",
-              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\RequestDevicePage.xaml.cs",
-              "RelativeToolTip": "Presentation\\Views\\RequestDevicePage.xaml.cs",
-              "ViewState": "AgIAADABAAAAAAAAAAApwD0BAAAIAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "SyncService.cs",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Infrastructure\\SyncService.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\SyncService.cs",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Infrastructure\\SyncService.cs",
+              "RelativeToolTip": "Infrastructure\\SyncService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwE8AAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T09:08:11.987Z",
+              "WhenOpened": "2026-03-01T08:55:46.24Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 10,
               "Title": "AvailableToBoolConverter.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Converters\\AvailableToBoolConverter.cs",
               "RelativeDocumentMoniker": "Presentation\\Converters\\AvailableToBoolConverter.cs",
@@ -152,12 +156,11 @@
               "RelativeToolTip": "Presentation\\Converters\\AvailableToBoolConverter.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAlAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:55:57.148Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:55:57.148Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 11,
               "Title": "RequestDeviceViewModel.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\ViewModels\\RequestDeviceViewModel.cs",
               "RelativeDocumentMoniker": "Presentation\\ViewModels\\RequestDeviceViewModel.cs",
@@ -165,12 +168,74 @@
               "RelativeToolTip": "Presentation\\ViewModels\\RequestDeviceViewModel.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAASwEMAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:57:25.02Z",
+              "WhenOpened": "2026-03-01T08:57:25.02Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml.cs",
+              "RelativeDocumentMoniker": "App.xaml.cs",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml.cs",
+              "RelativeToolTip": "App.xaml.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAADgAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T06:41:05.968Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "App.xaml",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml",
+              "RelativeDocumentMoniker": "App.xaml",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml",
+              "RelativeToolTip": "App.xaml",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAG8AAABHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-03-01T06:40:40.002Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "MainWindow.xaml",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\MainWindow.xaml",
+              "RelativeToolTip": "MainWindow.xaml",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABYAAABCAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-02-11T16:00:52.927Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 7,
+              "Title": "RequestDevicePage.xaml.cs",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\RequestDevicePage.xaml.cs",
+              "RelativeDocumentMoniker": "Presentation\\Views\\RequestDevicePage.xaml.cs",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\RequestDevicePage.xaml.cs",
+              "RelativeToolTip": "Presentation\\Views\\RequestDevicePage.xaml.cs",
+              "ViewState": "AgIAADABAAAAAAAAAAApwD0BAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T09:08:11.987Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "MyDevicePage.xaml.cs",
+              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\MyDevicePage.xaml.cs",
+              "RelativeDocumentMoniker": "Presentation\\Views\\MyDevicePage.xaml.cs",
+              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\MyDevicePage.xaml.cs",
+              "RelativeToolTip": "Presentation\\Views\\MyDevicePage.xaml.cs",
+              "ViewState": "AgIAANEAAAAAAAAAAAAAwAwAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-01T09:09:00.645Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "MyDeviceViewModel.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\ViewModels\\MyDeviceViewModel.cs",
               "RelativeDocumentMoniker": "Presentation\\ViewModels\\MyDeviceViewModel.cs",
@@ -178,12 +243,11 @@
               "RelativeToolTip": "Presentation\\ViewModels\\MyDeviceViewModel.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAAowCMAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:56:51.803Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:56:51.803Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "MyDevicePage.xaml",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Presentation\\Views\\MyDevicePage.xaml",
               "RelativeDocumentMoniker": "Presentation\\Views\\MyDevicePage.xaml",
@@ -191,12 +255,11 @@
               "RelativeToolTip": "Presentation\\Views\\MyDevicePage.xaml",
               "ViewState": "AgIAAFEAAAAAAAAAAAAAAAUAAAAeAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-01T09:07:15.498Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T09:07:15.498Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "DeviceModel.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\Entities\\DeviceModel.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\DeviceModel.cs",
@@ -204,12 +267,11 @@
               "RelativeToolTip": "Domain\\Entities\\DeviceModel.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T09:15:50.497Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T09:15:50.497Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
               "Title": "BorrowedDevice.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\Entities\\BorrowedDevice.cs",
               "RelativeDocumentMoniker": "Domain\\Entities\\BorrowedDevice.cs",
@@ -217,25 +279,11 @@
               "RelativeToolTip": "Domain\\Entities\\BorrowedDevice.cs",
               "ViewState": "AgIAAAcAAAAAAAAAAAA5wAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:53:45.778Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:53:45.778Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "SyncService.cs",
-              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Infrastructure\\SyncService.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\SyncService.cs",
-              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\Infrastructure\\SyncService.cs",
-              "RelativeToolTip": "Infrastructure\\SyncService.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAAAkwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:55:46.24Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "QueryParameters.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\ValueObjects\\QueryParameters.cs",
               "RelativeDocumentMoniker": "Domain\\ValueObjects\\QueryParameters.cs",
@@ -243,12 +291,11 @@
               "RelativeToolTip": "Domain\\ValueObjects\\QueryParameters.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:43:54.925Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:43:54.925Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "PagedResult.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\ValueObjects\\PagedResult.cs",
               "RelativeDocumentMoniker": "Domain\\ValueObjects\\PagedResult.cs",
@@ -256,12 +303,11 @@
               "RelativeToolTip": "Domain\\ValueObjects\\PagedResult.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:55:18.043Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:55:18.043Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "GetBorrowedDevicesUseCase.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\UseCases\\GetBorrowedDevicesUseCase.cs",
               "RelativeDocumentMoniker": "Domain\\UseCases\\GetBorrowedDevicesUseCase.cs",
@@ -269,12 +315,11 @@
               "RelativeToolTip": "Domain\\UseCases\\GetBorrowedDevicesUseCase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:55:12.511Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:55:12.511Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "GetCategoriesUseCase.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\UseCases\\GetCategoriesUseCase.cs",
               "RelativeDocumentMoniker": "Domain\\UseCases\\GetCategoriesUseCase.cs",
@@ -282,12 +327,11 @@
               "RelativeToolTip": "Domain\\UseCases\\GetCategoriesUseCase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:54:54.287Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:54:54.287Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 18,
               "Title": "GetDeviceModelsUseCase.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\UseCases\\GetDeviceModelsUseCase.cs",
               "RelativeDocumentMoniker": "Domain\\UseCases\\GetDeviceModelsUseCase.cs",
@@ -295,12 +339,11 @@
               "RelativeToolTip": "Domain\\UseCases\\GetDeviceModelsUseCase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:54:06.196Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:54:06.196Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "BorrowDeviceUseCase.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\UseCases\\BorrowDeviceUseCase.cs",
               "RelativeDocumentMoniker": "Domain\\UseCases\\BorrowDeviceUseCase.cs",
@@ -308,12 +351,11 @@
               "RelativeToolTip": "Domain\\UseCases\\BorrowDeviceUseCase.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:54:02.052Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:54:02.052Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 19,
               "Title": "IBorrowedDeviceRepository.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\Interfaces\\IBorrowedDeviceRepository.cs",
               "RelativeDocumentMoniker": "Domain\\Interfaces\\IBorrowedDeviceRepository.cs",
@@ -321,12 +363,11 @@
               "RelativeToolTip": "Domain\\Interfaces\\IBorrowedDeviceRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:48:39.036Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:48:39.036Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 22,
               "Title": "IDeviceModelRepository.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Domain\\Interfaces\\IDeviceModelRepository.cs",
               "RelativeDocumentMoniker": "Domain\\Interfaces\\IDeviceModelRepository.cs",
@@ -334,12 +375,11 @@
               "RelativeToolTip": "Domain\\Interfaces\\IDeviceModelRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:43:08.377Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:43:08.377Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 21,
               "Title": "DeviceModelRepository.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Data\\Repositories\\DeviceModelRepository.cs",
               "RelativeDocumentMoniker": "Data\\Repositories\\DeviceModelRepository.cs",
@@ -347,12 +387,11 @@
               "RelativeToolTip": "Data\\Repositories\\DeviceModelRepository.cs",
               "ViewState": "AgIAAJ8AAAAAAAAAAAAowJ0AAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:42:13.263Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:42:13.263Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 20,
               "Title": "BorrowedDeviceRepository.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Data\\Repositories\\BorrowedDeviceRepository.cs",
               "RelativeDocumentMoniker": "Data\\Repositories\\BorrowedDeviceRepository.cs",
@@ -360,12 +399,11 @@
               "RelativeToolTip": "Data\\Repositories\\BorrowedDeviceRepository.cs",
               "ViewState": "AgIAAAYAAAAAAAAAAAAAAIMAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T08:42:06.072Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T08:42:06.072Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 24,
               "Title": "SqliteDataSource.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Data\\DataSources\\SqliteDataSource.cs",
               "RelativeDocumentMoniker": "Data\\DataSources\\SqliteDataSource.cs",
@@ -373,25 +411,11 @@
               "RelativeToolTip": "Data\\DataSources\\SqliteDataSource.cs",
               "ViewState": "AgIAAIEAAAAAAAAAAAAkwH0AAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T06:41:26.788Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T06:41:26.788Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
-              "Title": "App.xaml.cs",
-              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml.cs",
-              "RelativeDocumentMoniker": "App.xaml.cs",
-              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml.cs",
-              "RelativeToolTip": "App.xaml.cs",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAlwDgAAAAIAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T06:41:05.968Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 23,
               "Title": "ISqliteDataSource.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\Data\\Interfaces\\ISqliteDataSource.cs",
               "RelativeDocumentMoniker": "Data\\Interfaces\\ISqliteDataSource.cs",
@@ -399,25 +423,11 @@
               "RelativeToolTip": "Data\\Interfaces\\ISqliteDataSource.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-01T06:40:55.571Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-01T06:40:55.571Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
-              "Title": "App.xaml",
-              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml",
-              "RelativeDocumentMoniker": "App.xaml",
-              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\App.xaml",
-              "RelativeToolTip": "App.xaml",
-              "ViewState": "AgIAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-03-01T06:40:40.002Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 25,
               "Title": "MainWindow.xaml.cs",
               "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\MainWindow.xaml.cs",
               "RelativeDocumentMoniker": "MainWindow.xaml.cs",
@@ -425,21 +435,7 @@
               "RelativeToolTip": "MainWindow.xaml.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-11T16:00:56.976Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "MainWindow.xaml",
-              "DocumentMoniker": "D:\\WinApp Samsung Project\\device_management\\App1\\MainWindow.xaml",
-              "RelativeDocumentMoniker": "MainWindow.xaml",
-              "ToolTip": "D:\\WinApp Samsung Project\\device_management\\App1\\MainWindow.xaml",
-              "RelativeToolTip": "MainWindow.xaml",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAACUAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2026-02-11T16:00:52.927Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-02-11T16:00:56.976Z"
             }
           ]
         }

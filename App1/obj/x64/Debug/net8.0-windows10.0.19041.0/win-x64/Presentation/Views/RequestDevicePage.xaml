@@ -7,6 +7,14 @@
     xmlns:primitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives"
                         >
 
+    <Page.Resources>
+        <Style x:Key="WrapCellStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="6,4" />
+        </Style>
+    </Page.Resources>
+
     <Grid Padding="20" RowDefinitions="Auto,*,Auto">
 
         <TextBlock
@@ -16,9 +24,9 @@
             FontWeight="Bold"
             Text="Model List" />
 
-        <controls:DataGrid x:ConnectionId='2'
+        <Border Grid.Row="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="2">
+            <controls:DataGrid x:ConnectionId='10'
             x:Name="ModelDataGrid"
-            Grid.Row="1"
             AutoGenerateColumns="False"
             CanUserSortColumns="True"
             ColumnHeaderHeight="86"
@@ -31,7 +39,8 @@
 
             <controls:DataGrid.Columns>
                 <!-- Model -->
-                <controls:DataGridTextColumn Binding="{Binding Model}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding Model}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -57,7 +66,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Manufacturer -->
-                <controls:DataGridTextColumn Binding="{Binding Manufacturer}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding Manufacturer}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -83,7 +93,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Category -->
-                <controls:DataGridTextColumn Binding="{Binding Category}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding Category}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -112,7 +123,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Sub Category -->
-                <controls:DataGridTextColumn Binding="{Binding SubCategory}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding SubCategory}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -141,7 +153,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Available -->
-                <controls:DataGridTextColumn Binding="{Binding Available}" Width="100">
+                <controls:DataGridTextColumn Binding="{Binding Available}" Width="100"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -165,7 +178,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Reserved -->
-                <controls:DataGridTextColumn Binding="{Binding Reserved}" Width="100">
+                <controls:DataGridTextColumn Binding="{Binding Reserved}" Width="100"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -222,13 +236,14 @@
                 </controls:DataGridTemplateColumn>
             </controls:DataGrid.Columns>
         </controls:DataGrid>
+        </Border>
 
         <!-- Pagination Bar -->
         <Grid Grid.Row="2" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
-                <TextBlock x:ConnectionId='9' x:Name="ShowingText" VerticalAlignment="Center" />
+                <TextBlock x:ConnectionId='8' x:Name="ShowingText" VerticalAlignment="Center" />
                 <TextBlock Text="  |  Rows per page:" VerticalAlignment="Center" Margin="8,0,4,0" />
-                <ComboBox x:ConnectionId='10' x:Name="PageSizeComboBox" VerticalAlignment="Center"                                                      Width="80">
+                <ComboBox x:ConnectionId='9' x:Name="PageSizeComboBox" VerticalAlignment="Center"                                                      Width="80">
                     <ComboBoxItem Content="10" Tag="10" />
                     <ComboBoxItem Content="25" Tag="25" />
                     <ComboBoxItem Content="50" Tag="50" IsSelected="True" />
@@ -236,23 +251,23 @@
                 </ComboBox>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                <Button x:ConnectionId='3' Content="First"                         x:Name="FirstBtn" />
-                <Button x:ConnectionId='4' Content="Previous"                        x:Name="PrevBtn" />
-                <ItemsRepeater x:ConnectionId='5' x:Name="PageNumbersRepeater"                                                    >
+                <Button x:ConnectionId='2' Content="First"                         x:Name="FirstBtn" />
+                <Button x:ConnectionId='3' Content="Previous"                        x:Name="PrevBtn" />
+                <ItemsRepeater x:ConnectionId='4' x:Name="PageNumbersRepeater"                                                    >
                     <ItemsRepeater.Layout>
                         <StackLayout Orientation="Horizontal" Spacing="2" />
                     </ItemsRepeater.Layout>
                     <ItemsRepeater.ItemTemplate>
                         <DataTemplate>
-                            <Button x:ConnectionId='8' MinWidth="36" MinHeight="36" HorizontalAlignment="Center"
+                            <Button x:ConnectionId='7' MinWidth="36" MinHeight="36" HorizontalAlignment="Center"
                                                              Content="{Binding DisplayText}"
                                     CornerRadius="18"
                                     IsEnabled="{Binding IsClickable}" />
                         </DataTemplate>
                     </ItemsRepeater.ItemTemplate>
                 </ItemsRepeater>
-                <Button x:ConnectionId='6' Content="Next"                        x:Name="NextBtn" />
-                <Button x:ConnectionId='7' Content="Last"                        x:Name="LastBtn" />
+                <Button x:ConnectionId='5' Content="Next"                        x:Name="NextBtn" />
+                <Button x:ConnectionId='6' Content="Last"                        x:Name="LastBtn" />
             </StackPanel>
         </Grid>
     </Grid>

@@ -30,7 +30,7 @@
     <AppXManifest Include="D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2026-03-01T10:24:59.862</Modified>
+      <Modified>2026-03-01T13:56:49.860</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
@@ -40,11 +40,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\WinApp Samsung Project\device_management\App1\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\apphost.exe">
       <PackagePath>App1.exe</PackagePath>
-      <Modified>2026-03-01T10:24:59.342</Modified>
+      <Modified>2026-03-01T13:56:49.390</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\WinApp Samsung Project\device_management\App1\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\App1.dll">
       <PackagePath>App1.dll</PackagePath>
-      <Modified>2026-03-01T10:24:59.333</Modified>
+      <Modified>2026-03-01T13:56:49.384</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Admin\.nuget\packages\microsoft.netcore.app.runtime.win-x64\8.0.23\runtimes\win-x64\lib\net8.0\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -964,7 +964,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\App1.deps.json">
       <PackagePath>App1.deps.json</PackagePath>
-      <Modified>2026-03-01T06:37:31.342</Modified>
+      <Modified>2026-03-01T13:49:11.419</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\Admin\.nuget\packages\communitytoolkit.winui.ui.controls.datagrid\7.1.2\lib\net5.0-windows10.0.18362\CommunityToolkit.WinUI.UI.Controls.DataGrid.pri">
       <PackagePath>CommunityToolkit.WinUI.UI.Controls.DataGrid.pri</PackagePath>
@@ -1004,7 +1004,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2026-03-01T10:20:00.438</Modified>
+      <Modified>2026-03-01T13:53:56.424</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

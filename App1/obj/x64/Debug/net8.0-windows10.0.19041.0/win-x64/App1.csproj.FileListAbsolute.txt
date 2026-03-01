@@ -554,3 +554,4 @@ D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.
 D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\SQLitePCLRaw.core.dll
 D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\SQLitePCLRaw.provider.e_sqlite3.dll
 D:\WinApp Samsung Project\device_management\App1\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\e_sqlite3.dll
+D:\WinApp Samsung Project\device_management\App1\obj\x64\Debug\net8.0-windows10.0.19041.0\win-x64\App1.sourcelink.json

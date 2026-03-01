@@ -174,45 +174,21 @@ public partial class MyDeviceViewModel : ObservableObject
     public void GeneratePageNumbers()
     {
         var pages = new ObservableCollection<PageItem>();
-        if (TotalPages <= 7)
+        const int maxVisible = 5;
+
+        if (TotalPages <= maxVisible)
         {
             for (int i = 1; i <= TotalPages; i++)
                 pages.Add(new PageItem { PageNumber = i, IsCurrent = i == CurrentPage });
         }
         else
         {
-            pages.Add(new PageItem { PageNumber = 1, IsCurrent = CurrentPage == 1 });
-
-            int windowStart, windowEnd;
-            const int maxVisible = 5;
-            const int half = 2;
-
-            if (CurrentPage <= 4)
-            {
-                windowStart = 2;
-                windowEnd = maxVisible + 1;
-            }
-            else if (CurrentPage >= TotalPages - 3)
-            {
-                windowStart = TotalPages - maxVisible;
-                windowEnd = TotalPages - 1;
-            }
-            else
-            {
-                windowStart = CurrentPage - half;
-                windowEnd = CurrentPage + half;
-            }
-
-            if (windowStart > 2)
-                pages.Add(new PageItem { PageNumber = null });
+            int windowEnd = Math.Min(CurrentPage + 2, TotalPages);
+            int windowStart = Math.Max(1, windowEnd - 4);
+            windowEnd = Math.Min(windowStart + 4, TotalPages);
 
             for (int i = windowStart; i <= windowEnd; i++)
                 pages.Add(new PageItem { PageNumber = i, IsCurrent = i == CurrentPage });
-
-            if (windowEnd < TotalPages - 1)
-                pages.Add(new PageItem { PageNumber = null });
-
-            pages.Add(new PageItem { PageNumber = TotalPages, IsCurrent = CurrentPage == TotalPages });
         }
 
         PageNumbers = pages;

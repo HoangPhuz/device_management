@@ -1,0 +1,221 @@
+@startuml(UC01_Xem_danh_sach_Model_trong_kho)
+!theme plain
+title UC01 - Xem danh sách Model trong kho
+
+actor User
+participant "RequestDevicePage" as Page
+participant "RequestDeviceViewModel" as VM
+participant "GetDeviceModelsUseCase" as UC
+participant "DeviceModelRepository" as Repo
+database "SQLite" as DB
+
+User -> Page: Mở trang
+activate Page
+Page -> VM: Load danh sách
+activate VM
+VM -> UC: Lấy danh sách có phân trang
+activate UC
+UC -> Repo: Truy vấn theo trang và kích thước
+activate Repo
+Repo -> DB: Thực thi truy vấn SELECT
+DB --> Repo: Trả về dòng dữ liệu
+Repo --> UC: PagedResult
+deactivate Repo
+UC --> VM: Dữ liệu danh sách
+deactivate UC
+VM --> Page: Gán Items, PageNumbers
+deactivate VM
+Page --> User: Render DataGrid và thanh phân trang
+deactivate Page
+@enduml
+
+@startuml(UC02_Loc_Model)
+!theme plain
+title UC02 - Lọc Model
+
+actor User
+participant "RequestDevicePage" as Page
+participant "RequestDeviceViewModel" as VM
+participant "GetDeviceModelsUseCase" as UC
+participant "DeviceModelRepository" as Repo
+database "SQLite" as DB
+
+User -> Page: Nhập text hoặc chọn ComboBox
+activate Page
+Page -> VM: Cập nhật filter và load lại
+activate VM
+VM -> UC: Lấy danh sách với điều kiện WHERE
+activate UC
+UC -> Repo: Truy vấn có bộ lọc
+activate Repo
+Repo -> DB: Thực thi SELECT với WHERE
+DB --> Repo: Trả về dòng thỏa mãn
+Repo --> UC: PagedResult
+deactivate Repo
+UC --> VM: Dữ liệu đã lọc
+deactivate UC
+VM --> Page: Gán Items mới
+deactivate VM
+Page --> User: Render DataGrid cập nhật
+deactivate Page
+@enduml
+
+@startuml(UC03_Sort_Model)
+!theme plain
+title UC03 - Sort Model
+
+actor User
+participant "RequestDevicePage" as Page
+participant "RequestDeviceViewModel" as VM
+participant "GetDeviceModelsUseCase" as UC
+participant "DeviceModelRepository" as Repo
+database "SQLite" as DB
+
+User -> Page: Click header cột
+activate Page
+Page -> VM: Đặt SortColumn, SortAscending và load lại
+activate VM
+VM -> UC: Lấy danh sách với ORDER BY
+activate UC
+UC -> Repo: Truy vấn có sắp xếp
+activate Repo
+Repo -> DB: Thực thi SELECT với ORDER BY
+DB --> Repo: Trả về dòng đã sắp xếp
+Repo --> UC: PagedResult
+deactivate Repo
+UC --> VM: Dữ liệu đã sort
+deactivate UC
+VM --> Page: Gán Items mới
+deactivate VM
+Page --> User: Render DataGrid theo thứ tự mới
+deactivate Page
+@enduml
+
+@startuml(UC04_Muon_Model)
+!theme plain
+title UC04 - Mượn Model
+
+actor User
+participant "RequestDevicePage" as Page
+participant "RequestDeviceViewModel" as VM
+participant "BorrowDeviceUseCase" as UC
+participant "DeviceModelRepository" as Repo
+participant "SyncService" as Sync
+database "SQLite" as DB
+
+User -> Page: Click nút Borrow
+activate Page
+Page -> User: Hiển thị ContentDialog chọn số lượng
+User -> Page: Nhấn OK
+Page -> VM: Gọi Borrow với modelId, quantity
+activate VM
+VM -> UC: Thực thi mượn
+activate UC
+UC -> Repo: Borrow với instanceId
+activate Repo
+Repo -> DB: SELECT kiểm tra Available
+DB --> Repo: Số lượng
+alt Available < quantity
+    Repo --> UC: false
+    UC --> VM: false
+    VM --> Page: Trả về lỗi
+    Page --> User: Hiển thị thông báo lỗi
+else Available >= quantity
+    Repo -> DB: UPDATE Available, Reserved\nINSERT BorrowedDevices
+    DB --> Repo: OK
+    Repo --> UC: true
+    deactivate Repo
+    UC --> VM: true
+    deactivate UC
+    VM -> Sync: Gọi Broadcast()
+    activate Sync
+    Sync -> Sync: Gửi UDP packet
+    deactivate Sync
+    VM -> VM: LoadDataAsync refresh
+    VM --> Page: Gán Items mới
+    Page --> User: Render danh sách cập nhật
+end
+deactivate VM
+deactivate Page
+@enduml
+
+@startuml(UC05_Tra_Model)
+!theme plain
+title UC05 - Trả Model
+
+actor User
+participant "MyDevicePage" as Page
+participant "MyDeviceViewModel" as VM
+participant "ReturnDeviceUseCase" as UC
+participant "BorrowedDeviceRepository" as Repo
+participant "SyncService" as Sync
+database "SQLite" as DB
+
+User -> Page: Chọn checkbox và click Return Selected
+activate Page
+Page -> User: Hiển thị ContentDialog xác nhận
+User -> Page: Nhấn Confirm
+Page -> VM: Gọi ReturnSelectedAsync
+activate VM
+VM -> UC: Thực thi trả với danh sách Id
+activate UC
+UC -> Repo: Return với deviceIds
+activate Repo
+Repo -> DB: UPDATE DeviceModels\nDELETE BorrowedDevices
+DB --> Repo: OK
+Repo --> UC: true
+deactivate Repo
+UC --> VM: true
+deactivate UC
+VM -> Sync: Gọi Broadcast()
+activate Sync
+Sync -> Sync: Gửi UDP packet
+deactivate Sync
+VM -> VM: LoadDataAsync refresh
+VM --> Page: Gán Items mới
+deactivate VM
+Page --> User: Render danh sách thiết bị đã mượn
+deactivate Page
+@enduml
+
+@startuml(UC06_Dong_bo_trang_thai_giua_cac_Instance)
+!theme plain
+title UC06 - Đồng bộ trạng thái giữa các Instance
+
+participant "RequestDeviceViewModel A\nhoặc MyDeviceViewModel A" as VMA
+participant "SyncService A" as SyncA
+participant "UDP Broadcast" as UDP
+participant "SyncService B" as SyncB
+participant "RequestDeviceViewModel B\nhoặc MyDeviceViewModel B" as VMB
+participant "GetDeviceModelsUseCase B\nhoặc GetBorrowedDevicesUseCase B" as UCB
+participant "Repository B" as RepoB
+database "SQLite" as DB
+
+== Instance A vừa mượn/trả xong ==
+VMA -> SyncA: Gọi Broadcast()
+activate SyncA
+SyncA -> UDP: Gửi message DATA_CHANGED
+deactivate SyncA
+
+== Instance B nhận và cập nhật ==
+UDP -> SyncB: Nhận packet
+activate SyncB
+SyncB -> SyncB: Raise DataChanged
+SyncB -> VMB: Fire DataChanged event
+deactivate SyncB
+activate VMB
+VMB -> VMB: Gọi LoadDataAsync
+VMB -> UCB: Lấy danh sách
+activate UCB
+UCB -> RepoB: Truy vấn
+activate RepoB
+RepoB -> DB: Thực thi SELECT
+DB --> RepoB: Dữ liệu
+RepoB --> UCB: PagedResult
+deactivate RepoB
+UCB --> VMB: Dữ liệu mới nhất
+deactivate UCB
+VMB -> VMB: Gán Items
+VMB --> VMB: UI refresh qua binding
+deactivate VMB
+@enduml

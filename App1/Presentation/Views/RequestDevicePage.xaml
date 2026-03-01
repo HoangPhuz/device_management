@@ -7,6 +7,14 @@
     xmlns:primitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives"
     Loaded="Page_Loaded">
 
+    <Page.Resources>
+        <Style x:Key="WrapCellStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="6,4" />
+        </Style>
+    </Page.Resources>
+
     <Grid Padding="20" RowDefinitions="Auto,*,Auto">
 
         <TextBlock
@@ -16,9 +24,9 @@
             FontWeight="Bold"
             Text="Model List" />
 
-        <controls:DataGrid
+        <Border Grid.Row="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="2">
+            <controls:DataGrid
             x:Name="ModelDataGrid"
-            Grid.Row="1"
             AutoGenerateColumns="False"
             CanUserSortColumns="True"
             ColumnHeaderHeight="86"
@@ -31,7 +39,8 @@
 
             <controls:DataGrid.Columns>
                 <!-- Model -->
-                <controls:DataGridTextColumn Binding="{Binding Model}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding Model}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -57,7 +66,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Manufacturer -->
-                <controls:DataGridTextColumn Binding="{Binding Manufacturer}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding Manufacturer}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -83,7 +93,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Category -->
-                <controls:DataGridTextColumn Binding="{Binding Category}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding Category}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -112,7 +123,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Sub Category -->
-                <controls:DataGridTextColumn Binding="{Binding SubCategory}" Width="*">
+                <controls:DataGridTextColumn Binding="{Binding SubCategory}" Width="*"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -141,7 +153,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Available -->
-                <controls:DataGridTextColumn Binding="{Binding Available}" Width="100">
+                <controls:DataGridTextColumn Binding="{Binding Available}" Width="100"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -165,7 +178,8 @@
                 </controls:DataGridTextColumn>
 
                 <!-- Reserved -->
-                <controls:DataGridTextColumn Binding="{Binding Reserved}" Width="100">
+                <controls:DataGridTextColumn Binding="{Binding Reserved}" Width="100"
+                                             ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -222,6 +236,7 @@
                 </controls:DataGridTemplateColumn>
             </controls:DataGrid.Columns>
         </controls:DataGrid>
+        </Border>
 
         <!-- Pagination Bar -->
         <Grid Grid.Row="2" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
