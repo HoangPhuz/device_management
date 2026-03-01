@@ -1,0 +1,8 @@
+graph TD
+    View["View (XAML Page)"] -->|binds to| ViewModel
+    ViewModel -->|calls| UseCase
+    UseCase -->|uses| IRepository["IRepository (Domain Interface)"]
+    Repository -->|implements| IRepository
+    Repository -->|uses| IDataSource["IDataSource (Data Interface)"]
+    SqliteDataSource -->|implements| IDataSource
+    SqliteDataSource -->|raw SQL| SQLite["SQLite DB"]

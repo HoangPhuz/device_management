@@ -1,0 +1,24 @@
+graph LR
+    subgraph DomainLayer ["Domain Layer (lõi - không phụ thuộc bên ngoài)"]
+        Entities["Entities<br/>DeviceModel, BorrowedDevice<br/>PagedResult, QueryParameters"]
+        Interfaces["Interfaces<br/>IDeviceModelRepository<br/>IBorrowedDeviceRepository"]
+        UseCases["Use Cases<br/>GetDeviceModels, BorrowDevice<br/>ReturnDevice, GetBorrowed<br/>GetCategories"]
+        UseCases --> Interfaces
+        UseCases --> Entities
+    end
+
+    subgraph DataLayer ["Data Layer (triển khai interface Domain)"]
+        Repositories["Repositories<br/>DeviceModelRepository<br/>BorrowedDeviceRepository"]
+        DSInterface["Interfaces<br/>ISqliteDataSource"]
+        DataSources["DataSources<br/>SqliteDataSource"]
+        Repositories --> DSInterface
+        DataSources -.->|implements| DSInterface
+        Repositories -.->|implements| Interfaces
+    end
+
+    subgraph PresentationLayer ["Presentation Layer (MVVM)"]
+        ViewModels["ViewModels<br/>RequestDeviceViewModel<br/>MyDeviceViewModel"]
+        Views["Views<br/>RequestDevicePage<br/>MyDevicePage"]
+        Views --> ViewModels
+        ViewModels --> UseCases
+    end

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Application
+    x:Class="App1.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:App1.Presentation.Converters"
+    xmlns:primitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <converters:AvailableToBoolConverter x:Key="AvailableToBoolConverter" />
+
+            <ControlTemplate x:Key="ColHeaderTemplate" TargetType="primitives:DataGridColumnHeader">
+                <Grid x:Name="RootElement" Background="{TemplateBinding Background}">
+                    <Rectangle
+                        x:Name="HoverRect"
+                        Fill="#FF000000"
+                        IsHitTestVisible="False"
+                        Opacity="0" />
+
+                    <ContentPresenter
+                        Padding="{TemplateBinding Padding}"
+                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                        Content="{TemplateBinding Content}"
+                        ContentTemplate="{TemplateBinding ContentTemplate}" />
+
+                    <Path
+                        x:Name="SortIcon"
+                        Width="8"
+                        Height="5"
+                        Margin="0,18,8,0"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Top"
+                        Data="M 0 1 L 0.5 0 L 1 1 Z"
+                        Fill="#FF444444"
+                        RenderTransformOrigin="0.5,0.5"
+                        Stretch="Fill"
+                        Visibility="Collapsed">
+                        <Path.RenderTransform>
+                            <RotateTransform x:Name="SortIconRotation" Angle="0" />
+                        </Path.RenderTransform>
+                    </Path>
+
+                    <Rectangle
+                        x:Name="LeftHeaderGripper"
+                        Width="8"
+                        HorizontalAlignment="Left"
+                        Fill="Transparent" />
+                    <Rectangle
+                        x:Name="RightHeaderGripper"
+                        Width="8"
+                        HorizontalAlignment="Right"
+                        Fill="Transparent" />
+
+                    <Rectangle
+                        Width="1"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Stretch"
+                        Fill="#FFD0D0D0"
+                        IsHitTestVisible="False" />
+
+                    <VisualStateManager.VisualStateGroups>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="MouseOver">
+                                <VisualState.Setters>
+                                    <Setter Target="HoverRect.Opacity" Value="0.06" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Pressed">
+                                <VisualState.Setters>
+                                    <Setter Target="HoverRect.Opacity" Value="0.14" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                        <VisualStateGroup x:Name="SortStates">
+                            <VisualState x:Name="Unsorted" />
+                            <VisualState x:Name="SortAscending">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Visibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SortIconRotation" Storyboard.TargetProperty="Angle">
+                                        <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualState>
+                            <VisualState x:Name="SortDescending">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Visibility">
+                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SortIconRotation" Storyboard.TargetProperty="Angle">
+                                        <DiscreteDoubleKeyFrame KeyTime="0" Value="180" />
+                                    </DoubleAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateManager.VisualStateGroups>
+                </Grid>
+            </ControlTemplate>
+
+            <Style x:Key="BaseColHeaderStyle" TargetType="primitives:DataGridColumnHeader">
+                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="Background" Value="White" />
+                <Setter Property="Template" Value="{StaticResource ColHeaderTemplate}" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

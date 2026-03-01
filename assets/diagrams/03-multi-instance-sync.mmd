@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant A as Instance A
+    participant DB as SQLite DB
+    participant UDP as UDP 127.0.0.1:54321
+    participant B as Instance B
+
+    A->>DB: BorrowDevice (transaction)
+    A->>UDP: Broadcast DATA_CHANGED
+    UDP->>B: Receive DATA_CHANGED
+    B->>DB: Re-query current page
+    B->>B: Update DataGrid

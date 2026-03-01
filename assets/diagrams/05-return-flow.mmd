@@ -1,0 +1,22 @@
+sequenceDiagram
+    participant User
+    participant View as MyDevicePage
+    participant Dialog as ReturnDialog
+    participant VM as ViewModel
+    participant UC as ReturnDeviceUseCase
+    participant DB as SQLite
+
+    User->>View: Chọn 3 dòng thiết bị bằng CheckBox
+    Note over View: Nút Return Selected được bật
+    User->>View: Click Return Selected
+    View->>Dialog: Hiển thị ContentDialog
+    Note over Dialog: Bạn sắp trả 3 thiết bị<br/>Danh sách Model + IMEI<br/>Confirm / Cancel
+    User->>Dialog: Click Confirm
+    Dialog->>VM: ReturnCommand(selectedDeviceIds)
+    VM->>UC: ExecuteAsync(deviceIds)
+    UC->>DB: BEGIN IMMEDIATE transaction
+    Note over DB: UPDATE Available, Reserved<br/>DELETE BorrowedDevices WHERE Id IN
+    DB-->>UC: Success
+    UC-->>VM: Result
+    VM->>VM: SyncService.Broadcast
+    VM->>VM: Reload + xóa selection

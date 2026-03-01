@@ -1,0 +1,20 @@
+sequenceDiagram
+    participant User
+    participant View as RequestDevicePage
+    participant Dialog as BorrowDialog
+    participant VM as ViewModel
+    participant UC as BorrowDeviceUseCase
+    participant DB as SQLite
+
+    User->>View: Click Borrow trên dòng model
+    View->>Dialog: Hiển thị ContentDialog
+    Note over Dialog: Model, Manufacturer, Category<br/>Available: 5<br/>Quantity: NumberBox 1-5
+    User->>Dialog: Chọn quantity = 3, click Confirm
+    Dialog->>VM: BorrowCommand(modelId, quantity)
+    VM->>UC: ExecuteAsync(modelId, quantity, instanceId)
+    UC->>DB: BEGIN IMMEDIATE transaction
+    Note over DB: Check Available >= 3<br/>UPDATE Available, Reserved<br/>INSERT 3 BorrowedDevice
+    DB-->>UC: Success
+    UC-->>VM: Result
+    VM->>VM: SyncService.Broadcast
+    VM->>VM: Reload trang hiện tại
