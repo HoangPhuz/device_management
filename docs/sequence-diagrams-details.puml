@@ -1,0 +1,281 @@
+@startuml(UC01_Xem_danh_sach_Model_trong_kho)
+!theme plain
+title UC01 - Xem danh sách Model trong kho
+
+actor User
+participant "RequestDevicePage\n(View)" as View
+participant "RequestDeviceViewModel" as VM
+participant "GetDeviceModelsUseCase" as UC
+participant "DeviceModelRepository" as Repo
+participant "SqliteDataSource" as DS
+database "SQLite\n(devices.db)" as DB
+
+User -> View: Mở trang "Request Device"
+activate View
+View -> View: Page_Loaded
+View -> VM: LoadCategoriesAsync()
+VM -> UC: GetCategoriesAsync() / GetSubCategoriesAsync()
+UC -> Repo: GetDistinctCategoriesAsync()\nGetDistinctSubCategoriesAsync()
+Repo -> DS: GetConnection()
+DS -> DB: Open connection\nPRAGMA WAL
+Repo -> DB: SELECT DISTINCT Category...
+DB --> Repo: categories
+Repo --> UC: List<string>
+UC --> VM: Categories, SubCategories
+VM --> View: (binding)
+
+View -> VM: LoadDataAsync()
+activate VM
+VM -> VM: Build QueryParameters\n(Page, PageSize, Filters, Sort)
+VM -> UC: ExecuteAsync(query)
+activate UC
+UC -> Repo: GetPagedAsync(query)
+activate Repo
+Repo -> DS: GetConnection()
+DS --> Repo: connection
+Repo -> DB: SELECT COUNT(*) FROM DeviceModels [WHERE...]
+DB --> Repo: totalCount
+Repo -> DB: SELECT ... FROM DeviceModels\n[WHERE...] ORDER BY ... LIMIT/OFFSET
+DB --> Repo: rows
+Repo --> UC: PagedResult<DeviceModel>
+deactivate Repo
+UC --> VM: PagedResult
+deactivate UC
+VM -> VM: Items, TotalRecords, TotalPages\nGeneratePageNumbers()
+VM --> View: Items, PageNumbers (binding)
+deactivate VM
+View -> View: ModelDataGrid.ItemsSource = Items\nUpdatePaginationUI()
+View --> User: Hiển thị danh sách Model (phân trang)
+deactivate View
+@enduml
+
+@startuml(UC02_Loc_Model)
+!theme plain
+title UC02 - Lọc Model
+
+actor User
+participant "RequestDevicePage" as View
+participant "RequestDeviceViewModel" as VM
+participant "GetDeviceModelsUseCase" as UC
+participant "DeviceModelRepository" as Repo
+participant "SqliteDataSource" as DS
+database "SQLite" as DB
+
+User -> View: Nhập text filter (Model/Manufacturer)\nhoặc chọn Category/SubCategory
+activate View
+View -> View: FilterTextBox_TextChanged\n(debounce 300ms)\nhoặc CategoryComboBox_SelectionChanged
+View -> VM: FilterModel / FilterManufacturer\nFilterCategory / FilterSubCategory
+View -> VM: ApplyFilter()\nLoadDataAsync()
+
+activate VM
+VM -> VM: ApplyFilter() → CurrentPage = 1\nBuild QueryParameters với Filters
+VM -> UC: ExecuteAsync(query)
+activate UC
+UC -> Repo: GetPagedAsync(query)
+activate Repo
+Repo -> Repo: Build WHERE (Category=@, SubCategory=@\nModel LIKE %, Manufacturer LIKE %)
+Repo -> DS: GetConnection()
+Repo -> DB: SELECT COUNT(*) FROM DeviceModels\nWHERE [điều kiện lọc]
+DB --> Repo: totalCount
+Repo -> DB: SELECT ... FROM DeviceModels\nWHERE [điều kiện] ORDER BY ... LIMIT/OFFSET
+DB --> Repo: rows
+Repo --> UC: PagedResult<DeviceModel>
+deactivate Repo
+UC --> VM: PagedResult
+deactivate UC
+VM --> View: Items, TotalRecords, PageNumbers
+deactivate VM
+View -> View: Cập nhật DataGrid, pagination
+View --> User: Danh sách đã lọc
+deactivate View
+@enduml
+
+@startuml(UC03_Sort_Model)
+!theme plain
+title UC03 - Sort Model
+
+actor User
+participant "RequestDevicePage" as View
+participant "RequestDeviceViewModel" as VM
+participant "GetDeviceModelsUseCase" as UC
+participant "DeviceModelRepository" as Repo
+participant "SqliteDataSource" as DS
+database "SQLite" as DB
+
+User -> View: Click header cột (sort ASC/DESC)
+activate View
+View -> View: DataGrid_Sorting(col, direction)
+View -> VM: SetSort(columnName, ascending)\nLoadDataAsync()
+
+activate VM
+VM -> VM: SortColumn, SortAscending\nCurrentPage = 1\nBuild QueryParameters
+VM -> UC: ExecuteAsync(query)
+activate UC
+UC -> Repo: GetPagedAsync(query)
+activate Repo
+Repo -> Repo: sortCol, sortDir (ORDER BY)
+Repo -> DS: GetConnection()
+Repo -> DB: SELECT ... FROM DeviceModels\n[WHERE...] ORDER BY sortCol ASC/DESC\nLIMIT/OFFSET
+DB --> Repo: rows
+Repo --> UC: PagedResult<DeviceModel>
+deactivate Repo
+UC --> VM: PagedResult
+deactivate UC
+VM --> View: Items (đã sắp xếp)
+deactivate VM
+View -> View: Cập nhật DataGrid, SortDirection header
+View --> User: Danh sách đã sắp xếp
+deactivate View
+@enduml
+
+@startuml(UC04_Muon_Model)
+!theme plain
+title UC04 - Mượn Model
+
+actor User
+participant "RequestDevicePage" as View
+participant "RequestDeviceViewModel" as VM
+participant "BorrowDeviceUseCase" as UC
+participant "DeviceModelRepository" as Repo
+participant "SyncService" as Sync
+participant "SqliteDataSource" as DS
+database "SQLite" as DB
+
+User -> View: Click nút "Borrow" trên một dòng
+activate View
+View -> View: BorrowButton_Click\nHiển thị ContentDialog (số lượng)
+User -> View: Chọn số lượng, nhấn OK
+View -> VM: BorrowAsync(modelId, quantity)
+
+activate VM
+VM -> UC: ExecuteAsync(modelId, quantity, App.InstanceId)
+activate UC
+UC -> Repo: BorrowAsync(modelId, quantity, instanceId)
+activate Repo
+
+Repo -> DS: GetConnection()
+Repo -> DB: SELECT Available FROM DeviceModels WHERE Id=@id
+DB --> Repo: available
+alt available < quantity
+    Repo --> UC: false
+    UC --> VM: false
+    VM --> View: (thông báo lỗi)
+else available >= quantity
+    Repo -> DB: UPDATE DeviceModels\nSET Available=Available-@q, Reserved=Reserved+@q\nWHERE Id=@id
+    Repo -> DB: INSERT INTO BorrowedDevices\n(DeviceModelId, ModelName, IMEI, ...)\n[cho từng thiết bị mượn]
+    DB --> Repo: OK
+    Repo --> UC: true
+    deactivate Repo
+    UC --> VM: true
+    deactivate UC
+    VM -> Sync: Broadcast()
+    activate Sync
+    Sync -> Sync: UDP Send "DATA_CHANGED|instanceId"\n(port 54321, broadcast)
+    deactivate Sync
+    VM -> VM: LoadDataAsync() [refresh danh sách]
+    VM --> View: Items cập nhật
+    View --> User: Thông báo thành công, danh sách mới
+end
+deactivate VM
+deactivate View
+@enduml
+
+@startuml(UC05_Tra_Model)
+!theme plain
+title UC05 - Trả Model
+
+actor User
+participant "MyDevicePage" as View
+participant "MyDeviceViewModel" as VM
+participant "ReturnDeviceUseCase" as UC
+participant "BorrowedDeviceRepository" as Repo
+participant "SyncService" as Sync
+participant "SqliteDataSource" as DS
+database "SQLite" as DB
+
+User -> View: Chọn checkbox các thiết bị\nClick "Return Selected"
+activate View
+View -> View: ReturnSelected_Click\nContentDialog xác nhận (danh sách thiết bị)
+User -> View: Nhấn "Confirm"
+View -> VM: ReturnSelectedAsync()
+
+activate VM
+VM -> VM: GetSelectedDevices() → selectedIds
+VM -> UC: ExecuteAsync(selectedIds)
+activate UC
+UC -> Repo: ReturnAsync(deviceIds)
+activate Repo
+
+Repo -> DS: GetConnection()
+Repo -> DB: BEGIN TRANSACTION
+Repo -> DB: SELECT DeviceModelId, COUNT(*)\nFROM BorrowedDevices WHERE Id IN (...)\nGROUP BY DeviceModelId
+DB --> Repo: modelCounts
+loop Cho từng DeviceModelId
+    Repo -> DB: UPDATE DeviceModels\nSET Available=Available+@cnt\nReserved=Reserved-@cnt WHERE Id=@id
+end
+Repo -> DB: DELETE FROM BorrowedDevices\nWHERE Id IN (...)
+Repo -> DB: COMMIT
+DB --> Repo: OK
+Repo --> UC: true
+deactivate Repo
+UC --> VM: true
+deactivate UC
+
+VM -> Sync: Broadcast()
+activate Sync
+Sync -> Sync: UDP Send "DATA_CHANGED|instanceId"
+deactivate Sync
+VM -> VM: LoadDataAsync() [refresh My Devices]
+VM --> View: Items cập nhật, UpdatePaginationUI()
+deactivate VM
+View --> User: Danh sách My Device đã cập nhật
+deactivate View
+@enduml
+
+@startuml(UC06_Dong_bo_trang_thai_giua_cac_Instance)
+!theme plain
+title UC06 - Đồng bộ trạng thái giữa các Instance
+
+participant "Instance A\n(User mượn/trả)" as A
+participant "SyncService A" as SyncA
+participant "RequestDeviceViewModel A\nhoặc MyDeviceViewModel A" as VMA
+participant "UDP Broadcast\n(port 54321)" as Network
+participant "SyncService B" as SyncB
+participant "ViewModel B" as VMB
+participant "UseCase B" as UCB
+participant "Repository B" as RepoB
+database "SQLite\n(shared)" as DB
+
+== Instance A thay đổi dữ liệu (Mượn hoặc Trả) ==
+A -> VMA: Borrow / Return (xong, DB đã cập nhật)
+activate VMA
+VMA -> SyncA: Broadcast()
+activate SyncA
+SyncA -> Network: Send "DATA_CHANGED|instanceIdA"
+deactivate SyncA
+deactivate VMA
+
+== Instance B nhận thông báo ==
+Network -> SyncB: Receive "DATA_CHANGED|instanceIdA"
+activate SyncB
+SyncB -> SyncB: text.EndsWith(instanceIdB)? → No\n→ Raise DataChanged
+SyncB -> VMB: DataChanged event
+deactivate SyncB
+activate VMB
+VMB -> VMB: OnSyncDataChanged()\nDispatcher.TryEnqueue(LoadDataAsync)
+VMB -> UCB: ExecuteAsync(query [,...])
+UCB -> RepoB: GetPagedAsync(...)
+RepoB -> DB: SELECT ... (dữ liệu mới nhất)
+DB --> RepoB: rows
+RepoB --> UCB: PagedResult
+UCB --> VMB: result
+VMB -> VMB: Items = result.Items\nNotify UI
+VMB --> VMB: [View cập nhật qua binding]
+deactivate VMB
+
+note over SyncB, VMB
+  Instance B không broadcast lại;
+  chỉ reload dữ liệu từ DB
+  để hiển thị đồng bộ với Instance A.
+end note
+@enduml
