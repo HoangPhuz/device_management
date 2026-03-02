@@ -246,6 +246,9 @@ Sequence diagram cho từng use case được mô tả bằng **PlantUML** trong
 |------|----------|
 | `docs/sequence-diagrams.puml` | 6 diagram: UC01 (Xem danh sách Model), UC02 (Lọc Model), UC03 (Sort Model), UC04 (Mượn Model), UC05 (Trả Model), UC06 (Đồng bộ giữa các Instance) |
 | `docs/README-sequence-diagrams.md` | Hướng dẫn xem và xuất hình (PlantUML server, VS Code, CLI) |
+| `docs/architecture-views.puml` | Module View + Component & Connector View (PlantUML) |
+| `assets/diagrams/06-module-view-client-only-deployment.mmd` | Module View – Client-Only Deployment (Mermaid): các module trong app WinUI 3, local storage, UDP sync giữa các instance |
+| `assets/diagrams/07-component-connector-view.mmd` | Component & Connector View (C&C): các component runtime và connector (method call, data binding, SQL, UDP, file I/O) |
 
 Mỗi diagram mô tả luồng: **User → View → ViewModel → UseCase → Repository → SqliteDataSource / SQLite**; UC04 và UC05 có thêm **SyncService.Broadcast()**; UC06 mô tả **Instance A broadcast → Instance B nhận DataChanged → reload dữ liệu**.
 

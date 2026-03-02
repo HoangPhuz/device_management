@@ -1,0 +1,128 @@
+@startuml(Module_View_ClientOnly)
+!theme plain
+title Module View - Client-Only Deployment
+
+skinparam componentStyle rectangle
+
+package "Device Management Client" {
+  package "Presentation Module" {
+    component "Views\n(RequestDevicePage, MyDevicePage)" as Views
+    component "ViewModels\n(RequestDeviceViewModel, MyDeviceViewModel)" as ViewModels
+  }
+
+  package "Domain Module" {
+    component "Entities\n(DeviceModel, BorrowedDevice)" as Entities
+    component "Value Objects\n(PagedResult, QueryParameters)" as ValueObjects
+    interface "IDeviceModelRepository" as IDeviceModelRepository
+    interface "IBorrowedDeviceRepository" as IBorrowedDeviceRepository
+    component "Use Cases\n(GetDeviceModels, GetCategories,\n BorrowDevice, GetBorrowed,\n ReturnDevice)" as UseCases
+  }
+
+  package "Data Module" {
+    interface "ISqliteDataSource" as ISqliteDataSource
+    component "Repositories\n(DeviceModelRepository,\n BorrowedDeviceRepository)" as Repositories
+    component "Data Sources\n(SqliteDataSource)" as DataSources
+  }
+
+  package "Infrastructure Module" {
+    component "SyncService" as SyncService
+    component "InstanceSlotManager" as InstanceSlotManager
+  }
+}
+
+database "SQLite DB\n(devices.db)" as SQLite
+file "instance_slots.json" as SlotFile
+cloud "UDP :54321" as UDP
+
+Views --> ViewModels
+ViewModels --> UseCases
+UseCases --> Entities
+UseCases --> ValueObjects
+UseCases ..> IDeviceModelRepository : uses
+UseCases ..> IBorrowedDeviceRepository : uses
+
+Repositories ..|> IDeviceModelRepository : implements
+Repositories ..|> IBorrowedDeviceRepository : implements
+Repositories --> ISqliteDataSource : uses
+DataSources ..|> ISqliteDataSource : implements
+DataSources --> SQLite
+
+ViewModels <--> SyncService : subscribe DataChanged
+SyncService --> UDP : broadcast/listen
+
+InstanceSlotManager --> SlotFile : read/write
+InstanceSlotManager ..> ViewModels : provides InstanceId
+@enduml
+
+
+@startuml(Component_Connector_View)
+!theme plain
+title Component & Connector View - Device Management
+
+skinparam componentStyle rectangle
+
+actor "User" as User
+
+component "RequestDevicePage.xaml" as RequestDevicePage
+component "MyDevicePage.xaml" as MyDevicePage
+component "RequestDeviceViewModel" as RequestDeviceVM
+component "MyDeviceViewModel" as MyDeviceVM
+
+component "GetDeviceModelsUseCase" as GetDeviceModels
+component "GetCategoriesUseCase" as GetCategories
+component "BorrowDeviceUseCase" as BorrowDevice
+component "GetBorrowedDevicesUseCase" as GetBorrowed
+component "ReturnDeviceUseCase" as ReturnDevice
+
+interface "IDeviceModelRepository" as C_IDeviceModelRepository
+interface "IBorrowedDeviceRepository" as C_IBorrowedDeviceRepository
+
+component "DeviceModelRepository" as DeviceModelRepo
+component "BorrowedDeviceRepository" as BorrowedRepo
+interface "ISqliteDataSource" as C_ISqliteDataSource
+component "SqliteDataSource" as SqliteDS
+
+component "SyncService" as C_SyncService
+component "InstanceSlotManager" as C_InstanceMgr
+
+database "SQLite DB\n(devices.db)" as C_SQLite
+file "instance_slots.json" as C_SlotFile
+cloud "UDP :54321" as C_UDP
+
+User --> RequestDevicePage : user events / display
+User --> MyDevicePage : user events / display
+
+RequestDevicePage --> RequestDeviceVM : data binding / commands
+MyDevicePage --> MyDeviceVM : data binding / commands
+
+RequestDeviceVM --> GetDeviceModels : calls
+RequestDeviceVM --> GetCategories : calls
+RequestDeviceVM --> BorrowDevice : calls
+MyDeviceVM --> GetBorrowed : calls
+MyDeviceVM --> ReturnDevice : calls
+
+GetDeviceModels ..> C_IDeviceModelRepository : uses
+GetCategories ..> C_IDeviceModelRepository : uses
+BorrowDevice ..> C_IDeviceModelRepository : uses
+GetBorrowed ..> C_IBorrowedDeviceRepository : uses
+ReturnDevice ..> C_IBorrowedDeviceRepository : uses
+
+DeviceModelRepo ..|> C_IDeviceModelRepository : implements
+BorrowedRepo ..|> C_IBorrowedDeviceRepository : implements
+
+DeviceModelRepo ..> C_ISqliteDataSource : uses
+BorrowedRepo ..> C_ISqliteDataSource : uses
+SqliteDS ..|> C_ISqliteDataSource : implements
+SqliteDS --> C_SQLite : SQL / connection
+
+RequestDeviceVM <--> C_SyncService : subscribe DataChanged / reload
+MyDeviceVM <--> C_SyncService : subscribe DataChanged / reload
+
+C_SyncService --> C_UDP : broadcast DATA_CHANGED
+C_SyncService --> C_UDP : listen
+
+C_InstanceMgr --> C_SlotFile : read / write slots
+C_InstanceMgr ..> RequestDeviceVM : provides InstanceId
+C_InstanceMgr ..> MyDeviceVM : provides InstanceId
+@enduml
+

@@ -1,0 +1,73 @@
+%% Component & Connector View — detailed (concrete components, same style as Dependency Flow)
+graph TD
+    subgraph Presentation["Presentation"]
+        RequestDevicePage["RequestDevicePage.xaml"]
+        MyDevicePage["MyDevicePage.xaml"]
+        RequestDeviceVM["RequestDeviceViewModel"]
+        MyDeviceVM["MyDeviceViewModel"]
+    end
+
+    subgraph Domain["Domain"]
+        GetDeviceModels["GetDeviceModelsUseCase"]
+        GetCategories["GetCategoriesUseCase"]
+        BorrowDevice["BorrowDeviceUseCase"]
+        GetBorrowed["GetBorrowedDevicesUseCase"]
+        ReturnDevice["ReturnDeviceUseCase"]
+        IDeviceModelRepo["IDeviceModelRepository"]
+        IBorrowedRepo["IBorrowedDeviceRepository"]
+    end
+
+    subgraph Data["Data"]
+        DeviceModelRepo["DeviceModelRepository"]
+        BorrowedRepo["BorrowedDeviceRepository"]
+        ISqliteDS["ISqliteDataSource"]
+        SqliteDS["SqliteDataSource"]
+    end
+
+    subgraph Infrastructure["Infrastructure"]
+        SyncService["SyncService"]
+        InstanceMgr["InstanceSlotManager"]
+    end
+
+    subgraph External["External"]
+        SQLite["SQLite DB<br/>devices.db"]
+        SlotFile["instance_slots.json"]
+        UDP["UDP :54321"]
+    end
+
+    RequestDevicePage -->|binds to| RequestDeviceVM
+    MyDevicePage -->|binds to| MyDeviceVM
+
+    RequestDeviceVM -->|calls| GetDeviceModels
+    RequestDeviceVM -->|calls| GetCategories
+    RequestDeviceVM -->|calls| BorrowDevice
+    MyDeviceVM -->|calls| GetBorrowed
+    MyDeviceVM -->|calls| ReturnDevice
+
+    GetDeviceModels -->|uses| IDeviceModelRepo
+    GetCategories -->|uses| IDeviceModelRepo
+    BorrowDevice -->|uses| IDeviceModelRepo
+    GetBorrowed -->|uses| IBorrowedRepo
+    ReturnDevice -->|uses| IBorrowedRepo
+
+    DeviceModelRepo -->|implements| IDeviceModelRepo
+    BorrowedRepo -->|implements| IBorrowedRepo
+    DeviceModelRepo -->|uses| ISqliteDS
+    BorrowedRepo -->|uses| ISqliteDS
+    SqliteDS -->|implements| ISqliteDS
+    SqliteDS -->|raw SQL, connection| SQLite
+
+    RequestDeviceVM <-->|subscribe DataChanged / reload| SyncService
+    MyDeviceVM <-->|subscribe DataChanged / reload| SyncService
+    SyncService -->|broadcast DATA_CHANGED| UDP
+    SyncService -->|listen| UDP
+
+    InstanceMgr -->|read / write slots| SlotFile
+    InstanceMgr -.->|provides InstanceId| RequestDeviceVM
+    InstanceMgr -.->|provides InstanceId| MyDeviceVM
+
+    style Presentation fill:#e8f4f8
+    style Domain fill:#f0f8f0
+    style Data fill:#fff8e8
+    style Infrastructure fill:#f5f0ff
+    style External fill:#f5f5f5
