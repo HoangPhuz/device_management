@@ -1,0 +1,29 @@
+@startuml
+
+left to right direction
+
+actor User
+actor "Other Application Instance" as Other
+
+rectangle "Device Management System" {
+
+    usecase "Xem danh sách Model" as UC1
+    usecase "Lọc Model" as UC2
+    usecase "Sắp xếp Model" as UC3
+    usecase "Mượn Model" as UC4
+    usecase "Trả Model" as UC5
+    usecase "Đồng bộ giữa các Instance" as UC6
+}
+
+User -- UC1
+User -- UC2
+User -- UC3
+User -- UC4
+User -- UC5
+
+Other -- UC6
+
+UC4 ..> UC6 : <<include>>
+UC5 ..> UC6 : <<include>>
+
+@enduml
