@@ -1,2 +1,11 @@
 .vs/
 App1/.vs/
+App1/bin/
+App1/obj/
+
+bin/
+obj/
+
+
+**/bin/
+**/obj/

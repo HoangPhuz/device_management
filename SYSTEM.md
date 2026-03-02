@@ -4,23 +4,41 @@ Tài liệu mô tả toàn bộ kiến trúc, chức năng và triển khai củ
 
 ---
 
-## Mục lục
+## 1. Giới thiệu (Introduction)
 
-1. [Tổng quan](#1-tổng-quan)
-2. [Yêu cầu chức năng](#2-yêu-cầu-chức-năng)
-3. [Kiến trúc hệ thống](#3-kiến-trúc-hệ-thống)
-4. [Cấu trúc dự án](#4-cấu-trúc-dự-án)
-5. [Công nghệ và thư viện](#5-công-nghệ-và-thư-viện)
-6. [Mô hình dữ liệu](#6-mô-hình-dữ-liệu)
-7. [Luồng nghiệp vụ chính](#7-luồng-nghiệp-vụ-chính)
-8. [Đa instance và đồng bộ](#8-đa-instance-và-đồng-bộ)
-9. [Cấu hình và lưu trữ](#9-cấu-hình-và-lưu-trữ)
-10. [Build và chạy ứng dụng](#10-build-và-chạy-ứng-dụng)
-11. [Sequence Diagrams (PlantUML)](#11-sequence-diagrams-plantuml)
+### Tài liệu (Document)
+
+- **Document Purpose (Mục đích tài liệu)**: Tài liệu này mô tả tổng quan, yêu cầu chức năng và phi chức năng, kiến trúc, cấu trúc mã nguồn, mô hình dữ liệu, luồng nghiệp vụ, cơ chế đồng bộ đa instance, cấu hình và cách build/chạy của hệ thống **Device Management**. Tài liệu được sử dụng làm chuẩn tham chiếu cho phát triển, bảo trì và onboard thành viên mới.
+- **Scope (Phạm vi)**: Nội dung tập trung vào ứng dụng Device Management chạy dưới dạng desktop client-only trên Windows, bao gồm: mô tả use case (functional requirements), non-functional requirements, kiến trúc Clean Architecture + MVVM, các thành phần Domain/Data/Presentation/Infrastructure, cơ chế đồng bộ real-time giữa nhiều instance, cấu hình lưu trữ local và hướng dẫn triển khai. Tài liệu không đi sâu vào thiết kế chi tiết từng lớp hay test case mức thấp.
+- **Intended Audience (Đối tượng sử dụng)**: Developer, QA, Technical Lead, người vận hành/bảo trì hệ thống có kiến thức cơ bản về .NET, WinUI 3, SQLite và các khái niệm Clean Architecture, MVVM.
+
+### Phần mềm (Software)
+
+- **Software Purpose (Mục đích phần mềm)**: Ứng dụng Device Management cung cấp khả năng quản lý danh sách model thiết bị trong kho, hỗ trợ người dùng tìm kiếm, lọc, sắp xếp, mượn và trả thiết bị, đồng thời đảm bảo các instance đang chạy luôn hiển thị trạng thái kho nhất quán thông qua cơ chế đồng bộ real-time.
+- **Scope (Phạm vi phần mềm)**: Phần mềm bao gồm hai màn hình chính `Request Device` (xem danh sách model trong kho và mượn thiết bị) và `My Device` (xem và trả thiết bị đã mượn), hỗ trợ filter/sort/pagination trên tập dữ liệu lớn (khoảng 1.000.000 bản ghi), lưu trữ dữ liệu trên SQLite local và đồng bộ nhiều instance qua UDP broadcast. Ngoài phạm vi: không cung cấp server trung tâm, không có authentication/authorization, không xử lý báo cáo nâng cao hay tích hợp hệ thống bên ngoài.
+- **Intended Audience (Đối tượng người dùng phần mềm)**: Người dùng nội bộ tổ chức cần quản lý và mượn/trả thiết bị (ví dụ nhân viên kho, phòng lab, kỹ sư kiểm thử), làm việc trên máy trạm Windows và không yêu cầu kiến thức kỹ thuật sâu về hệ thống.
 
 ---
 
-## 1. Tổng quan
+## Mục lục
+
+1. [Giới thiệu (Introduction)](#1-giới-thiệu-introduction)
+2. [Tổng quan](#2-tổng-quan)
+3. [Yêu cầu chức năng](#3-yêu-cầu-chức-năng)
+4. [Yêu cầu phi chức năng (Non-functional Requirements)](#4-yêu-cầu-phi-chức-năng-non-functional-requirements)
+5. [Kiến trúc hệ thống](#5-kiến-trúc-hệ-thống)
+6. [Cấu trúc dự án](#6-cấu-trúc-dự-án)
+7. [Công nghệ và thư viện](#7-công-nghệ-và-thư-viện)
+8. [Mô hình dữ liệu](#8-mô-hình-dữ-liệu)
+9. [Luồng nghiệp vụ chính](#9-luồng-nghiệp-vụ-chính)
+10. [Đa instance và đồng bộ](#10-đa-instance-và-đồng-bộ)
+11. [Cấu hình và lưu trữ](#11-cấu-hình-và-lưu-trữ)
+12. [Build và chạy ứng dụng](#12-build-và-chạy-ứng-dụng)
+13. [Sequence Diagrams (PlantUML)](#13-sequence-diagrams-plantuml)
+
+---
+
+## 2. Tổng quan
 
 - **Mục đích**: Cho phép người dùng xem danh sách model thiết bị trong kho, lọc/sắp xếp, mượn thiết bị và xem/trả thiết bị đã mượn. Hệ thống hỗ trợ nhiều instance chạy đồng thời với đồng bộ dữ liệu real-time và phân tách danh sách "My Device" theo từng instance.
 - **Nền tảng**: Windows (WinUI 3, Windows App SDK), .NET 8.
@@ -28,7 +46,7 @@ Tài liệu mô tả toàn bộ kiến trúc, chức năng và triển khai củ
 
 ---
 
-## 2. Yêu cầu chức năng
+## 3. Yêu cầu chức năng
 
 | UC | Mô tả |
 |----|--------|
@@ -43,7 +61,18 @@ Tài liệu mô tả toàn bộ kiến trúc, chức năng và triển khai củ
 
 ---
 
-## 3. Kiến trúc hệ thống
+## 4. Yêu cầu phi chức năng (Non-functional Requirements)
+
+- **Performance**: Các thao tác filter/sort/pagination trên danh sách model phải hoàn thành trong thời gian ≤ 1 giây với bộ dữ liệu mẫu khoảng 1.000.000 bản ghi, dựa trên việc tối ưu index SQLite, sử dụng WAL mode và debounce 300ms cho filter text.
+- **Reliability / Availability**: Ứng dụng chạy theo mô hình client-only, dữ liệu lưu trữ trên SQLite local; cơ chế `SyncService` sử dụng UDP broadcast giúp các instance đang hoạt động nhận biết thay đổi dữ liệu và tự reload để giữ trạng thái hiển thị nhất quán.
+- **Compatibility**: Hệ thống chạy trên Windows 10/11 (build 19041+), sử dụng .NET 8 (`net8.0-windows10.0.19041.0`), hỗ trợ các kiến trúc x86, x64, ARM64 và phụ thuộc vào WinUI 3, Windows App SDK.
+- **Usability**: Giao diện người dùng chia thành hai trang chính (`Request Device`, `My Device`) với `NavigationView`, DataGrid hỗ trợ filter/sort trực quan, phân trang tối đa 5 nút (sliding window) và các `ContentDialog` rõ ràng cho thao tác mượn/trả và xác nhận.
+- **Maintainability / Scalability**: Kiến trúc theo Clean Architecture kết hợp MVVM, tách biệt các layer Domain, Data, Presentation, Infrastructure và sử dụng dependency injection, giúp dễ mở rộng thêm use case, repository hoặc thay thế `ISqliteDataSource` mà không ảnh hưởng đến phần còn lại.
+- **Security**: Hệ thống không triển khai authentication/authorization hay encryption; dữ liệu (SQLite DB, file cấu hình slot) nằm trong `%LocalAppData%` của từng user trên máy cục bộ, cần được bảo vệ bởi chính sách bảo mật của hệ điều hành và môi trường vận hành.
+
+---
+
+## 5. Kiến trúc hệ thống
 
 Hệ thống áp dụng **Clean Architecture** với các lớp:
 
@@ -76,7 +105,7 @@ Hệ thống áp dụng **Clean Architecture** với các lớp:
 
 ---
 
-## 4. Cấu trúc dự án
+## 6. Cấu trúc dự án
 
 ```
 device_management/
@@ -132,7 +161,7 @@ device_management/
 
 ---
 
-## 5. Công nghệ và thư viện
+## 7. Công nghệ và thư viện
 
 | Thành phần | Công nghệ / Package |
 |------------|----------------------|
@@ -147,7 +176,7 @@ device_management/
 
 ---
 
-## 6. Mô hình dữ liệu
+## 8. Mô hình dữ liệu
 
 ### 6.1 Entity Domain
 
@@ -168,7 +197,7 @@ device_management/
 
 ---
 
-## 7. Luồng nghiệp vụ chính
+## 9. Luồng nghiệp vụ chính
 
 ### 7.1 Request Device (Xem / Lọc / Sort / Mượn)
 
@@ -192,7 +221,7 @@ device_management/
 
 ---
 
-## 8. Đa instance và đồng bộ
+## 10. Đa instance và đồng bộ
 
 - **SyncService**: UDP broadcast trên port **54321**, message dạng `DATA_CHANGED|{instanceId}`. Instance nhận message (và không phải chính nó) thì raise `DataChanged` → ViewModel reload dữ liệu (Request Device / My Device).
 - **InstanceSlotManager**: File `%LocalAppData%\DeviceManagement\instance_slots.json` lưu danh sách slot (InstanceId + Pid). Process mới tìm slot trống (Pid = 0 hoặc process không còn chạy), gán Pid hiện tại và dùng hoặc tạo InstanceId cho slot đó.
@@ -200,7 +229,7 @@ device_management/
 
 ---
 
-## 9. Cấu hình và lưu trữ
+## 11. Cấu hình và lưu trữ
 
 | Nội dung | Đường dẫn / Giá trị |
 |----------|----------------------|
@@ -212,7 +241,7 @@ device_management/
 
 ---
 
-## 10. Build và chạy ứng dụng
+## 12. Build và chạy ứng dụng
 
 ### Yêu cầu
 
@@ -238,7 +267,7 @@ Hoặc mở solution/project trong Visual Studio và chạy (F5).
 
 ---
 
-## 11. Sequence Diagrams (PlantUML)
+## 13. Sequence Diagrams (PlantUML)
 
 Sequence diagram cho từng use case được mô tả bằng **PlantUML** trong thư mục `docs/`:
 
