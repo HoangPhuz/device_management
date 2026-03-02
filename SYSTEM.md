@@ -101,7 +101,43 @@ Hệ thống áp dụng **Clean Architecture** với các lớp:
 - **Presentation**: MVVM (CommunityToolkit.Mvvm), ViewModels gọi Use Cases, không phụ thuộc trực tiếp vào Data/Infrastructure ngoài DI.
 - **Domain**: Entities (`DeviceModel`, `BorrowedDevice`), Value Objects (`PagedResult<T>`, `QueryParameters`), Interfaces repository, Use Cases (single responsibility).
 - **Data**: SQLite qua `ISqliteDataSource`, Repository triển khai filter/sort/pagination bằng SQL động và index.
-- **Infrastructure**: Đồng bộ đa instance (SyncService), quản lý slot/InstanceId (InstanceSlotManager).
+- **Infrastructure**: Đồng bộ đa instance (`SyncService`), quản lý slot/`InstanceId` (`InstanceSlotManager`).
+
+### Presentation layer (Presentation Module)
+
+- **Vai trò chính**: Là lớp giao tiếp với người dùng, hiển thị dữ liệu và nhận thao tác (click, filter, sort, mượn/trả). Presentation không chứa nghiệp vụ lõi mà chỉ điều phối và binding dữ liệu.
+- **Thành phần tiêu biểu**:
+  - `MainWindow` và `NavigationView`: khung điều hướng giữa hai trang `RequestDevicePage` và `MyDevicePage`.
+  - **Views**: `RequestDevicePage`, `MyDevicePage` hiển thị DataGrid, filter, pagination và các nút lệnh (Borrow, Return Selected).
+  - **ViewModels**: `RequestDeviceViewModel`, `MyDeviceViewModel` (theo MVVM/`ObservableObject`) giữ state UI (filter, sort, trang hiện tại, danh sách Items) và expose `ICommand` để gọi Use Case.
+- **Quan hệ với layer khác**: ViewModel gọi trực tiếp các Use Case trong Domain layer và lắng nghe sự kiện `DataChanged` từ `SyncService` (Infrastructure) để reload dữ liệu; View chỉ bind vào ViewModel qua data binding/commands.
+
+### Domain layer (Domain Module)
+
+- **Vai trò chính**: Chứa toàn bộ nghiệp vụ lõi (business rules) và mô hình domain độc lập với chi tiết kỹ thuật lưu trữ hay UI.
+- **Thành phần tiêu biểu**:
+  - **Entities**: `DeviceModel`, `BorrowedDevice` mô tả thông tin thiết bị trong kho và thiết bị đã mượn.
+  - **Value Objects**: `PagedResult<T>` (kết quả phân trang), `QueryParameters` (tham số filter/sort/pagination).
+  - **Interfaces (repository contracts)**: `IDeviceModelRepository`, `IBorrowedDeviceRepository` định nghĩa các thao tác truy vấn/mượn/trả mà không gắn với SQLite.
+  - **Use Cases**: `GetDeviceModelsUseCase`, `GetCategoriesUseCase`, `BorrowDeviceUseCase`, `GetBorrowedDevicesUseCase`, `ReturnDeviceUseCase` thực thi từng luồng nghiệp vụ cụ thể, chỉ phụ thuộc vào interfaces và entities/value objects.
+- **Quan hệ với layer khác**: Domain không phụ thuộc Presentation/Data/Infrastructure; Data layer implement các repository interface, Presentation layer chỉ gọi Use Case đã được DI từ Domain.
+
+### Data layer (Data Module)
+
+- **Vai trò chính**: Cung cấp hiện thực cụ thể cho các repository trong Domain, làm việc với SQLite và tối ưu truy vấn.
+- **Thành phần tiêu biểu**:
+  - **Interfaces (data source contracts)**: `ISqliteDataSource` trừu tượng hóa việc lấy connection, khởi tạo schema, thực thi lệnh SQL.
+  - **Repositories**: `DeviceModelRepository`, `BorrowedDeviceRepository` implement lần lượt `IDeviceModelRepository`, `IBorrowedDeviceRepository`, chịu trách nhiệm build câu lệnh SQL (WHERE, ORDER BY, LIMIT/OFFSET) dựa trên `QueryParameters`.
+  - **Data Sources**: `SqliteDataSource` implement `ISqliteDataSource`, tạo database `devices.db`, thiết lập WAL, index và seed 1.000.000 bản ghi mẫu.
+- **Quan hệ với layer khác**: Use Case (Domain) chỉ nhìn thấy interface repository; Repositories trong Data layer dùng `ISqliteDataSource` để làm việc với SQLite mà không lộ chi tiết này ra ngoài Domain/Presentation.
+
+### Infrastructure layer (Infrastructure Module)
+
+- **Vai trò chính**: Chứa các thành phần hạ tầng dùng chung, không thuộc nghiệp vụ lõi nhưng cần cho vận hành hệ thống (đa instance, đồng bộ, quản lý InstanceId).
+- **Thành phần tiêu biểu**:
+  - **`SyncService`**: gửi và lắng nghe UDP broadcast `DATA_CHANGED|{instanceId}` trên port 54321; raise event `DataChanged` để ViewModel reload dữ liệu khi có thay đổi từ instance khác.
+  - **`InstanceSlotManager`**: quản lý file `instance_slots.json` trong `%LocalAppData%`, gán và tái sử dụng `InstanceId` cho từng process/slot, bảo đảm mỗi instance có danh sách \"My Device\" riêng.
+- **Quan hệ với layer khác**: `SyncService` được ViewModels (Presentation) subscribe để cập nhật UI; `InstanceSlotManager` được dùng khi khởi động app (trong `App.xaml.cs`) để lấy `InstanceId` cung cấp cho Domain/Data khi mượn/trả và truy vấn theo instance.
 
 ---
 

@@ -3,6 +3,7 @@
 title Module View - Client-Only Deployment
 
 skinparam componentStyle rectangle
+top to bottom direction
 
 package "Device Management Client" {
   package "Presentation Module" {
