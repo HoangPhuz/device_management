@@ -96,7 +96,7 @@ public class SqliteDataSource : ISqliteDataSource
             new[] { "Case", "Charger", "Cable", "Screen Protector" }
         };
 
-        const int totalRecords = 1_000_000;
+        const int totalRecords = 2_500_000;
         const int batchSize = 50_000;
         var rng = new Random(42);
 

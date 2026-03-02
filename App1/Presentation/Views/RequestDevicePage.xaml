@@ -52,9 +52,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Model" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Model" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="#F5F5F5" PointerPressed="FilterArea_PointerPressed">
+                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <TextBox VerticalAlignment="Center" PlaceholderText="Model" Tag="Model" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
@@ -79,9 +79,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Manufacturer" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Manufacturer" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="#F5F5F5" PointerPressed="FilterArea_PointerPressed">
+                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <TextBox VerticalAlignment="Center" PlaceholderText="Manufacturer" Tag="Manufacturer" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
@@ -106,9 +106,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Category" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Category" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="#F5F5F5" PointerPressed="FilterArea_PointerPressed">
+                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                                           PlaceholderText="-- All --"
                                                           Loaded="CategoryComboBox_Loaded"
@@ -136,9 +136,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Sub Category" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Sub Category" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="#F5F5F5" PointerPressed="FilterArea_PointerPressed">
+                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
                                                           PlaceholderText="-- All --"
                                                           Loaded="SubCategoryComboBox_Loaded"
@@ -166,9 +166,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Available" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Available" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="#F5F5F5" />
+                                            <Grid Grid.Row="2" Background="White" />
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -191,9 +191,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Reserved" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Reserved" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="#F5F5F5" />
+                                            <Grid Grid.Row="2" Background="White" />
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -215,9 +215,9 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Function" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Function" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="#F5F5F5" PointerPressed="FilterArea_PointerPressed">
+                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <Button HorizontalAlignment="Stretch" VerticalAlignment="Center" Content="Clear Filter" Click="ClearFilter_Click" />
                                             </Grid>
                                         </Grid>

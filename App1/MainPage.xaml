@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="App1.BlankPage1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:App1"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:primitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives"
+    
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <!--<Grid.Background>
+                <ImageBrush ImageSource="https://img4.thuthuatphanmem.vn/uploads/2020/06/22/hinh-nen-xanh-duong-4k_092909557.jpg" Stretch="UniformToFill"/>
+            </Grid.Background>-->
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.1875*" />
+                    <ColumnDefinition Width="0.5625*" />
+                    <ColumnDefinition Width="4.25*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel 
+                    Grid.Column="0"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Tapped="StackPanel_Tapped">
+                    <FontIcon
+                        Glyph="&#xE700;"
+                        Foreground="White"
+                        FontSize="24"
+                        />
+                   </StackPanel>
+
+                <StackPanel
+                    Grid.Column="1"
+                    HorizontalAlignment="Left">
+                    <Image
+                        MaxHeight="40"
+                        Source="https://img4.thuthuatphanmem.vn/uploads/2020/06/22/hinh-nen-xanh-duong-4k_092909557.jpg"
+                        Stretch="Fill"/>
+                </StackPanel>
+
+                <StackPanel
+                    Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+                    <FontIcon
+                        Glyph="&#xE77B;"
+                        Foreground="White"
+                        FontSize="24"/>
+                    <TextBlock Margin="2,0,10,0" Foreground="White">Nguyen Hoang Phuc</TextBlock>
+                </StackPanel>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.9*" />
+                <ColumnDefinition Width="4.1*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0">
+                <Grid Background="#566b7f">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.9*" />
+                        <RowDefinition Height="9.1*" />
+                    </Grid.RowDefinitions>
+                    <Grid Background="#3f5061">
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="18"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Text="Device Management"
+                            TextWrapping="Wrap"/>
+                    </Grid>
+
+                    <ListView
+                        Grid.Row="1"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        SelectionMode="Single">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Grid>
+                                                <Grid x:Name="Background" Background="{TemplateBinding Background}">
+                                                    <ContentPresenter
+                                                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                        Content="{TemplateBinding Content}"
+                                                        ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                                                </Grid>
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup x:Name="CommonStates">
+                                                        <VisualState x:Name="Normal"/>
+                                                        <VisualState x:Name="PointerOver">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Background">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="#30FFFFFF"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                        <VisualState x:Name="Selected">
+                                                            <Storyboard>
+                                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Background">
+                                                                    <DiscreteObjectKeyFrame KeyTime="0" Value="#60FFFFFF"/>
+                                                                </ObjectAnimationUsingKeyFrames>
+                                                            </Storyboard>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+
+                        <ListView.Items>
+                            <ListViewItem>
+                                <Grid Padding="15,0,0,0">
+                                    <TextBlock
+                                        FontSize="14"
+                                        Text="Request Device"
+                                        TextWrapping="Wrap"/>
+                                </Grid>
+                            </ListViewItem>
+                            <ListViewItem>
+                                <Grid Padding="15,0,0,0">
+                                    <TextBlock
+                                        FontSize="14"
+                                        Text="My Device"
+                                        TextWrapping="Wrap"/>
+                                </Grid>
+                            </ListViewItem>
+                        </ListView.Items>
+                    </ListView>
+                </Grid>
+            </Grid>
+
+            <Grid Grid.Column="1" Margin="20">
+                <Border
+                    x:Name="ShadowRect"
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
+                    Translation="0,0,64">
+                    <Border.Shadow>
+                        <ThemeShadow x:Name="shadow" />
+                    </Border.Shadow>
+                </Border>
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="1*" />
+                            <RowDefinition Height="7*" />
+                            <RowDefinition Height="1*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <TextBlock
+                            Padding="25,20,0,0"
+                            FontSize="24"
+                            Text="Model List"/>
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <StackPanel
+                            Margin="0,0,25,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                                <Button
+                                Margin="0,0,8,0"
+                                Content="Columns"
+                                Foreground="Black"
+                                IsEnabled="False"/>
+                                <ComboBox Width="70">
+                                    <ComboBoxItem IsSelected="True">10</ComboBoxItem>
+                                    <ComboBoxItem>20</ComboBoxItem>
+                                    <ComboBoxItem>50</ComboBoxItem>
+                                    <ComboBoxItem>100</ComboBoxItem>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid x:Name="RootGrid" Grid.Row="2">
+                            <Border
+                            Margin="20,0,20,0"
+                            BorderBrush="LightGray"
+                            BorderThickness="0.8">
+                                <controls:DataGrid
+                                x:Name="MyDataGrid"
+                                AutoGenerateColumns="False"
+                                CanUserSortColumns="True"
+                                ColumnHeaderHeight="80"
+                                GridLinesVisibility="All"
+                               
+                                >
+                                    <controls:DataGrid.Columns>
+                                        <controls:DataGridTextColumn Binding="{Binding ProductId}">
+                                            <controls:DataGridTextColumn.HeaderStyle>
+
+
+
+                                                <Style TargetType="primitives:DataGridColumnHeader">
+                                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                                    <Setter Property="Padding" Value="0"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="primitives:DataGridColumnHeader">
+                                                                <Border
+                                                                Background="{TemplateBinding Background}"
+                                                                BorderBrush="{TemplateBinding BorderBrush}"
+                                                                BorderThickness="{TemplateBinding BorderThickness}"
+                                                                >
+                                                                    <Grid>
+                                                                        <Grid.RowDefinitions>
+                                                                            <RowDefinition />
+                                                                            <RowDefinition />
+                                                                        </Grid.RowDefinitions>
+
+                                                                        <Border
+                                                                        Grid.Row="0"
+                                                                        Background="LightGray"
+                                                                        BorderBrush="#ddd"
+                                                                        BorderThickness="0.8"
+                                                                        >
+                                                                            <Grid>
+                                                                                <TextBlock
+                                                                                HorizontalAlignment="Center"
+                                                                                VerticalAlignment="Center"
+                                                                                FontWeight="Bold"
+                                                                                Foreground="#566b7f"
+                                                                                Text="Model"
+                                                                                />
+                                                                                <FontIcon
+                                                                                Margin="0,-12,8,0"
+                                                                                HorizontalAlignment="Right"
+                                                                                VerticalAlignment="Center"
+                                                                                FontFamily="Segoe UI"
+                                                                                FontSize="9"
+                                                                                Foreground="#566b7f"
+                                                                                Glyph="&#x25B2;"/>
+                                                                                <FontIcon
+                                                                                  Margin="0,7,8,0"
+                                                                                  HorizontalAlignment="Right"
+                                                                                  VerticalAlignment="Center"
+                                                                                  FontFamily="Segoe UI"
+                                                                                  FontSize="9"
+                                                                                  Foreground="#566b7f"
+                                                                                  Glyph="&#x25BC;"/>
+
+                                                                            </Grid>
+
+
+                                                                        </Border>
+
+                                                                        <Border
+                                                                        Grid.Row="1"
+                                                                        Padding="4,0,4,0"
+                                                                        Background="White"
+                                                                        BorderBrush="#ddd"
+                                                                        BorderThickness="0.8">
+                                                                            <TextBox
+                                                                            Width="150"
+                                                                            HorizontalAlignment="Center"
+                                                                            VerticalAlignment="Center"
+                                                                            PlaceholderText="Model"
+                                                                            TextAlignment="Center"
+                                                                            />
+                                                                        </Border>
+
+                                                                    </Grid>
+                                                                </Border>
+                                                            </ControlTemplate>
+
+                                                        </Setter.Value>
+                                                    </Setter>
+
+                                                </Style>
+                                            </controls:DataGridTextColumn.HeaderStyle>
+
+
+                                        </controls:DataGridTextColumn>
+                                    </controls:DataGrid.Columns>
+
+                                </controls:DataGrid>
+
+                            </Border>
+
+
+                        </Grid>
+
+                    </Grid>
+                </Grid>
+
+            </Grid>
+        </Grid>
+
+    </Grid>
+</Page>
