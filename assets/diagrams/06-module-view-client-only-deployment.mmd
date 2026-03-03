@@ -1,0 +1,56 @@
+%% Module View — aligned with Component & Connector view (07)
+%% Modules = code structure; same layers and concrete names as 07
+flowchart TB
+    subgraph Client["Device Management Client"]
+        subgraph Presentation["Presentation Module"]
+            Views["Views<br/>RequestDevicePage, MyDevicePage"]
+            ViewModels["ViewModels<br/>RequestDeviceViewModel, MyDeviceViewModel"]
+        end
+
+        subgraph Domain["Domain Module"]
+            Entities["Entities<br/>DeviceModel, BorrowedDevice"]
+            ValueObjects["Value Objects<br/>PagedResult, QueryParameters"]
+            DomainIf["Interfaces<br/>IDeviceModelRepository<br/>IBorrowedDeviceRepository"]
+            UseCases["Use Cases<br/>GetDeviceModelsUseCase, GetCategoriesUseCase<br/>BorrowDeviceUseCase, GetBorrowedDevicesUseCase<br/>ReturnDeviceUseCase"]
+        end
+
+        subgraph Data["Data Module"]
+            DataIf["Interfaces<br/>ISqliteDataSource"]
+            Repositories["Repositories<br/>DeviceModelRepository<br/>BorrowedDeviceRepository"]
+            DataSources["Data Sources<br/>SqliteDataSource"]
+        end
+
+        subgraph Infrastructure["Infrastructure Module"]
+            SyncService["SyncService"]
+            InstanceMgr["InstanceSlotManager"]
+        end
+    end
+
+    subgraph External["Outside Application"]
+        SQLite["SQLite DB<br/>devices.db"]
+        SlotFile["instance_slots.json"]
+        UDP["UDP :54321"]
+    end
+
+    Views --> ViewModels
+    ViewModels --> UseCases
+    UseCases --> DomainIf
+    UseCases --> Entities
+    UseCases --> ValueObjects
+
+    Repositories -.->|implements| DomainIf
+    Repositories --> DataIf
+    DataSources -.->|implements| DataIf
+    DataSources --> SQLite
+    Repositories --> DataSources
+
+    SyncService --> UDP
+    InstanceMgr --> SlotFile
+    InstanceMgr -.->|provides InstanceId| ViewModels
+    ViewModels <-->|subscribe DataChanged| SyncService
+
+    style Presentation fill:#e8f4f8
+    style Domain fill:#f0f8f0
+    style Data fill:#fff8e8
+    style Infrastructure fill:#f5f0ff
+    style External fill:#f5f5f5

@@ -8,30 +8,163 @@
     Title="Device Management"
     mc:Ignorable="d">
 
-    <Window.SystemBackdrop>
-        <MicaBackdrop />
-    </Window.SystemBackdrop>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-    <NavigationView
-        x:Name="NavView"
-        IsBackButtonVisible="Collapsed"
-        IsSettingsVisible="False"
-        ItemInvoked="NavView_ItemInvoked"
-        PaneDisplayMode="Left">
+        <!-- Top Header Bar -->
+        <Grid Grid.Row="0" Background="#3f5061">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-        <NavigationView.MenuItems>
-            <NavigationViewItem Content="Request Device" Tag="RequestDevice">
-                <NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="AllApps" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-            <NavigationViewItem Content="My Device" Tag="MyDevice">
-                <NavigationViewItem.Icon>
-                    <SymbolIcon Symbol="Contact" />
-                </NavigationViewItem.Icon>
-            </NavigationViewItem>
-        </NavigationView.MenuItems>
+            <StackPanel
+                Grid.Column="0"
+                Padding="12,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                Tapped="HamburgerButton_Tapped">
+                <FontIcon
+                    Glyph="&#xE700;"
+                    Foreground="White"
+                    FontSize="24" />
+            </StackPanel>
 
-        <Frame x:Name="ContentFrame" />
-    </NavigationView>
+            <StackPanel
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center">
+                <Image
+                    MaxHeight="40"
+                    Source="https://img4.thuthuatphanmem.vn/uploads/2020/06/22/hinh-nen-xanh-duong-4k_092909557.jpg"
+                    Stretch="Fill" />
+            </StackPanel>
+
+            <StackPanel
+                Grid.Column="2"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal"
+                Padding="0,0,10,0">
+                <FontIcon
+                    Glyph="&#xE77B;"
+                    Foreground="White"
+                    FontSize="24" />
+                <TextBlock
+                    Margin="6,0,0,0"
+                    Foreground="White"
+                    VerticalAlignment="Center"
+                    Text="Nguyen Hoang Phuc" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Body: Sidebar + Content -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="SidebarColumn" Width="220" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left Sidebar -->
+            <Grid Grid.Column="0" Background="#566b7f">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Background="#3f5061" Padding="0,10">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Text="Device Management"
+                        TextWrapping="Wrap" />
+                </Grid>
+
+                <ListView
+                    x:Name="SidebarMenu"
+                    Grid.Row="1"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    SelectionMode="Single"
+                    SelectionChanged="SidebarMenu_SelectionChanged">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Background" Value="Transparent" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListViewItem">
+                                        <Grid>
+                                            <Grid x:Name="Background" Background="{TemplateBinding Background}">
+                                                <ContentPresenter
+                                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                    Content="{TemplateBinding Content}"
+                                                    ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                            </Grid>
+                                            <VisualStateManager.VisualStateGroups>
+                                                <VisualStateGroup x:Name="CommonStates">
+                                                    <VisualState x:Name="Normal" />
+                                                    <VisualState x:Name="PointerOver">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Background">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#30FFFFFF" />
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                    <VisualState x:Name="Selected">
+                                                        <Storyboard>
+                                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="Background" Storyboard.TargetProperty="Background">
+                                                                <DiscreteObjectKeyFrame KeyTime="0" Value="#60FFFFFF" />
+                                                            </ObjectAnimationUsingKeyFrames>
+                                                        </Storyboard>
+                                                    </VisualState>
+                                                </VisualStateGroup>
+                                            </VisualStateManager.VisualStateGroups>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+
+                    <ListView.Items>
+                        <ListViewItem Tag="RequestDevice">
+                            <Grid Padding="15,8">
+                                <TextBlock FontSize="14" Text="Request Device" />
+                            </Grid>
+                        </ListViewItem>
+                        <ListViewItem Tag="MyDevice">
+                            <Grid Padding="15,8">
+                                <TextBlock FontSize="14" Text="My Device" />
+                            </Grid>
+                        </ListViewItem>
+                    </ListView.Items>
+                </ListView>
+            </Grid>
+
+            <!-- Content Area -->
+            <Grid Grid.Column="1" Margin="20">
+                <!-- Card shadow background -->
+                <Border
+                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="{ThemeResource OverlayCornerRadius}"
+                    Translation="0,0,64">
+                    <Border.Shadow>
+                        <ThemeShadow />
+                    </Border.Shadow>
+                </Border>
+
+                <Frame x:Name="ContentFrame" />
+            </Grid>
+        </Grid>
+    </Grid>
 </Window>

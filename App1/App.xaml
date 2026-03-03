@@ -7,11 +7,21 @@
     xmlns:primitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives">
     <Application.Resources>
         <ResourceDictionary>
+
+          
+
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
             </ResourceDictionary.MergedDictionaries>
 
             <converters:AvailableToBoolConverter x:Key="AvailableToBoolConverter" />
+
+            <Thickness x:Key="TextControlBorderThemeThinknessFocused">
+                0.5
+            </Thickness>
+
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="LightGray" ></SolidColorBrush>
+            
 
             <ControlTemplate x:Key="ColHeaderTemplate" TargetType="primitives:DataGridColumnHeader">
                 <Grid x:Name="RootElement" Background="{TemplateBinding Background}">
@@ -28,22 +38,29 @@
                         Content="{TemplateBinding Content}"
                         ContentTemplate="{TemplateBinding ContentTemplate}" />
 
-                    <Path
-                        x:Name="SortIcon"
-                        Width="8"
-                        Height="5"
-                        Margin="0,18,8,0"
-                        HorizontalAlignment="Right"
+                    <StackPanel
+                        x:Name="SortIconPanel"
+                        Orientation="Vertical"
                         VerticalAlignment="Top"
-                        Data="M 0 1 L 0.5 0 L 1 1 Z"
-                        Fill="#FF444444"
-                        RenderTransformOrigin="0.5,0.5"
-                        Stretch="Fill"
-                        Visibility="Collapsed">
-                        <Path.RenderTransform>
-                            <RotateTransform x:Name="SortIconRotation" Angle="0" />
-                        </Path.RenderTransform>
-                    </Path>
+                        HorizontalAlignment="Right"
+                        Margin="0,8,8,0"
+                        Height="24"
+                        Spacing="-2">
+                        <FontIcon
+                            x:Name="SortAscIcon"
+                            FontFamily="Segoe UI"
+                            FontSize="9"
+                            Foreground="#566b7f"
+                            Glyph="&#x25B2;"
+                            Opacity="1" />
+                        <FontIcon
+                            x:Name="SortDescIcon"
+                            FontFamily="Segoe UI"
+                            FontSize="9"
+                            Foreground="#566b7f"
+                            Glyph="&#x25BC;"
+                            Opacity="1" />
+                    </StackPanel>
 
                     <Rectangle
                         x:Name="LeftHeaderGripper"
@@ -78,26 +95,23 @@
                             </VisualState>
                         </VisualStateGroup>
                         <VisualStateGroup x:Name="SortStates">
-                            <VisualState x:Name="Unsorted" />
+                            <VisualState x:Name="Unsorted">
+                                <VisualState.Setters>
+                                    <Setter Target="SortAscIcon.Opacity" Value="1" />
+                                    <Setter Target="SortDescIcon.Opacity" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
                             <VisualState x:Name="SortAscending">
-                                <Storyboard>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SortIconRotation" Storyboard.TargetProperty="Angle">
-                                        <DiscreteDoubleKeyFrame KeyTime="0" Value="0" />
-                                    </DoubleAnimationUsingKeyFrames>
-                                </Storyboard>
+                                <VisualState.Setters>
+                                    <Setter Target="SortAscIcon.Opacity" Value="0" />
+                                    <Setter Target="SortDescIcon.Opacity" Value="1" />
+                                </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="SortDescending">
-                                <Storyboard>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SortIcon" Storyboard.TargetProperty="Visibility">
-                                        <DiscreteObjectKeyFrame KeyTime="0" Value="Visible" />
-                                    </ObjectAnimationUsingKeyFrames>
-                                    <DoubleAnimationUsingKeyFrames Storyboard.TargetName="SortIconRotation" Storyboard.TargetProperty="Angle">
-                                        <DiscreteDoubleKeyFrame KeyTime="0" Value="180" />
-                                    </DoubleAnimationUsingKeyFrames>
-                                </Storyboard>
+                                <VisualState.Setters>
+                                    <Setter Target="SortAscIcon.Opacity" Value="1" />
+                                    <Setter Target="SortDescIcon.Opacity" Value="0" />
+                                </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
@@ -108,7 +122,7 @@
                 <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                 <Setter Property="VerticalContentAlignment" Value="Stretch" />
                 <Setter Property="Padding" Value="0" />
-                <Setter Property="Background" Value="White" />
+                <Setter Property="Background" Value="LightGray" />
                 <Setter Property="Template" Value="{StaticResource ColHeaderTemplate}" />
             </Style>
         </ResourceDictionary>

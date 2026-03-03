@@ -221,6 +221,28 @@ public sealed partial class MyDevicePage : Page
         }
     }
 
+    public async void SetPageSize(int size)
+    {
+        _vm.SetPageSize(size);
+
+        if (PageSizeComboBox != null)
+        {
+            for (int i = 0; i < PageSizeComboBox.Items.Count; i++)
+            {
+                if (PageSizeComboBox.Items[i] is ComboBoxItem ci && ci.Tag as string == size.ToString())
+                {
+                    PageSizeComboBox.SelectedIndex = i;
+                    break;
+                }
+            }
+        }
+
+        if (!_isLoaded) return;
+        await _vm.LoadDataAsync();
+        UpdatePaginationUI();
+        DeviceDataGrid.ItemsSource = _vm.Items;
+    }
+
     private void UpdatePaginationUI()
     {
         if (ShowingText == null || FirstBtn == null) return;

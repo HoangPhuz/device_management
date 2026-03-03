@@ -1,0 +1,185 @@
+@startuml
+title UC_01 - View Model List
+
+actor User
+participant System
+database Database
+
+User -> System : Open "Request Device" page
+System -> Database : Query model list
+Database --> System : Return model data
+System -> System : Apply paging
+System --> User : Display model list
+
+@enduml
+
+
+@startuml
+title UC_02 - Filter Model
+
+actor User
+participant System
+database Database
+
+User -> System : Enter filter criteria
+System -> Database : Query models with filter
+Database --> System : Return filtered data
+System --> User : Display filtered list
+
+@enduml
+
+@startuml
+title UC_03 - Sort Model
+
+actor User
+participant System
+database Database
+
+User -> System : Select sort column (ASC/DESC)
+System -> Database : Query models with sorting
+Database --> System : Return sorted data
+System --> User : Display sorted list
+
+@enduml
+
+@startuml
+title UC_04 - Borrow Model
+
+actor User
+participant System
+database Database
+participant "Other Instance" as Other
+
+User -> System : Click "Borrow"
+activate System
+
+System -> User : Show ContentDialog "Borrow Device"
+note right of System
+ContentDialog "Borrow Device" gồm:
+- Thông tin Model
+- Số lượng khả dụng
+- ComboBox chọn số lượng
+- Nút OK / Cancel
+end note
+
+User -> System : Confirm quantity
+System -> Database : Check availability
+activate Database
+Database --> System : Availability result
+deactivate Database
+
+alt Available
+    System -> Database : Update status to "Occupied"
+    activate Database
+    Database --> System : Update success
+    deactivate Database
+
+    System -> Other : Notify data changed
+    System --> User : Show success message
+else Not Available
+    System --> User : Show error message
+end
+
+deactivate System
+@enduml
+
+
+@startuml
+title UC_04 - Borrow Model
+
+actor User
+participant System
+database Database
+participant "Other Instance" as Other
+
+User -> System : Click "Borrow"
+activate System
+
+System -> User : Show ContentDialog "Borrow Device"
+note right of System
+ContentDialog "Borrow Device" gồm:
+- Thông tin Model
+- Số lượng khả dụng
+- ComboBox chọn số lượng
+- Nút OK / Cancel
+end note
+
+User -> System : Confirm quantity
+System -> Database : Check availability
+activate Database
+Database --> System : Availability result
+deactivate Database
+
+alt Available
+    System -> Database : Update status to "Occupied"
+    activate Database
+    Database --> System : Update success
+    deactivate Database
+
+    System -> Other : Notify data changed
+    System --> User : Show success message
+else Not Available
+    System --> User : Show error message
+end
+
+deactivate System
+@enduml
+
+@startuml
+title UC_05 - Return Model
+
+actor User
+participant System
+database Database
+participant "Other Instance" as Other
+
+User -> System : Select devices (checkbox)
+activate System
+
+User -> System : Click "Return Selected"
+
+System -> User : Show ContentDialog "Confirm Return"
+note right of System
+ContentDialog "Confirm Return" gồm:
+- Danh sách thiết bị được chọn
+- Thông điệp xác nhận
+- Nút Confirm / Cancel
+end note
+
+User -> System : Confirm return
+
+System -> Database : Update device status
+activate Database
+Database --> System : Update success
+deactivate Database
+
+System -> Other : Notify data changed
+System --> User : Show success message
+
+deactivate System
+@enduml
+
+@startuml
+title UC_06 - Sync Between Instances
+
+participant "System A" as A
+database Database
+participant "System B" as B
+
+A -> Database : Update device status
+activate Database
+Database --> A : Update success
+deactivate Database
+
+A -> B : Notify data changed
+
+activate B
+B -> Database : Reload latest data
+activate Database
+Database --> B : Return updated data
+deactivate Database
+
+B -> B : Refresh UI
+deactivate B
+
+@enduml
