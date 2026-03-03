@@ -214,8 +214,7 @@
                                 AutoGenerateColumns="False"
                                 CanUserSortColumns="True"
                                 ColumnHeaderHeight="80"
-                                GridLinesVisibility="All"
-                               
+                                GridLinesVisibility="All"                             
                                 >
                                     <controls:DataGrid.Columns>
                                         <controls:DataGridTextColumn Binding="{Binding ProductId}">

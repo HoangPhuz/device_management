@@ -47,15 +47,19 @@
                         Height="24"
                         Spacing="-2">
                         <FontIcon
+                            x:Name="SortAscIcon"
                             FontFamily="Segoe UI"
                             FontSize="9"
                             Foreground="#566b7f"
-                            Glyph="&#x25B2;" />
+                            Glyph="&#x25B2;"
+                            Opacity="1" />
                         <FontIcon
+                            x:Name="SortDescIcon"
                             FontFamily="Segoe UI"
                             FontSize="9"
                             Foreground="#566b7f"
-                            Glyph="&#x25BC;" />
+                            Glyph="&#x25BC;"
+                            Opacity="1" />
                     </StackPanel>
 
                     <Rectangle
@@ -91,9 +95,24 @@
                             </VisualState>
                         </VisualStateGroup>
                         <VisualStateGroup x:Name="SortStates">
-                            <VisualState x:Name="Unsorted" />
-                            <VisualState x:Name="SortAscending" />
-                            <VisualState x:Name="SortDescending" />
+                            <VisualState x:Name="Unsorted">
+                                <VisualState.Setters>
+                                    <Setter Target="SortAscIcon.Opacity" Value="1" />
+                                    <Setter Target="SortDescIcon.Opacity" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="SortAscending">
+                                <VisualState.Setters>
+                                    <Setter Target="SortAscIcon.Opacity" Value="0" />
+                                    <Setter Target="SortDescIcon.Opacity" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="SortDescending">
+                                <VisualState.Setters>
+                                    <Setter Target="SortAscIcon.Opacity" Value="1" />
+                                    <Setter Target="SortDescIcon.Opacity" Value="0" />
+                                </VisualState.Setters>
+                            </VisualState>
                         </VisualStateGroup>
                     </VisualStateManager.VisualStateGroups>
                 </Grid>

@@ -163,40 +163,7 @@
                     </Border.Shadow>
                 </Border>
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-                    <!-- Toolbar: Rows per page (matching MainPage style) -->
-                    <Grid Grid.Row="0">
-                        <StackPanel
-                            Margin="0,0,25,0"
-                            HorizontalAlignment="Right"
-                            VerticalAlignment="Center"
-                            Orientation="Horizontal">
-                            <Button
-                                Margin="0,0,8,0"
-                                Content="Rows per page"
-                                Foreground="Black"
-                                IsEnabled="False" />
-                            <ComboBox
-                                x:Name="PageSizeComboBox"
-                                Width="70"
-                                SelectionChanged="PageSizeComboBox_SelectionChanged">
-                                <ComboBoxItem Content="10" Tag="10" />
-                                <ComboBoxItem Content="25" Tag="25" />
-                                <ComboBoxItem Content="50" Tag="50" IsSelected="True" />
-                                <ComboBoxItem Content="100" Tag="100" />
-                            </ComboBox>
-                        </StackPanel>
-                    </Grid>
-
-                    <Frame
-                        x:Name="ContentFrame"
-                        Grid.Row="1" />
-                </Grid>
+                <Frame x:Name="ContentFrame" />
             </Grid>
         </Grid>
     </Grid>

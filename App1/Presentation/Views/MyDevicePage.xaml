@@ -15,14 +15,14 @@
         </Style>
     </Page.Resources>
 
-    <Grid Padding="20" RowDefinitions="Auto,Auto,*,Auto">
+    <Grid Padding="20" RowDefinitions="Auto,Auto,Auto,*,Auto">
 
         <TextBlock
             Grid.Row="0"
             Margin="0,0,0,12"
             FontSize="24"
             FontWeight="Bold"
-            Text="My Devices" />
+            Text="Device List" />
 
         <Button
             x:Name="ReturnSelectedBtn"
@@ -32,9 +32,33 @@
             Content="Return Selected"
             IsEnabled="False" />
 
+        <!-- Toolbar: Rows per page -->
+        <Grid Grid.Row="2">
+            <StackPanel
+                Margin="0,0,25,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Margin="0,0,8,0"
+                    Content="Rows per page"
+                    Foreground="Black"
+                    IsEnabled="False" />
+                <ComboBox
+                    x:Name="PageSizeComboBox"
+                    Width="70"
+                    SelectionChanged="PageSizeComboBox_SelectionChanged">
+                    <ComboBoxItem Content="10" Tag="10" />
+                    <ComboBoxItem Content="25" Tag="25" />
+                    <ComboBoxItem Content="50" Tag="50" IsSelected="True" />
+                    <ComboBoxItem Content="100" Tag="100" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
         <controls:DataGrid
             x:Name="DeviceDataGrid"
-            Grid.Row="2"
+            Grid.Row="3"
             AutoGenerateColumns="False"
             CanUserSortColumns="True"
             CanUserResizeColumns="True"
@@ -372,16 +396,9 @@
         </controls:DataGrid>
 
         <!-- Pagination Bar -->
-        <Grid Grid.Row="3" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
+        <Grid Grid.Row="4" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
             <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
                 <TextBlock x:Name="ShowingText" VerticalAlignment="Center" />
-                <TextBlock Text="  |  Rows per page:" VerticalAlignment="Center" Margin="8,0,4,0" />
-                <ComboBox x:Name="PageSizeComboBox" VerticalAlignment="Center" SelectionChanged="PageSizeComboBox_SelectionChanged" Width="80">
-                    <ComboBoxItem Content="10" Tag="10" />
-                    <ComboBoxItem Content="25" Tag="25" />
-                    <ComboBoxItem Content="50" Tag="50" IsSelected="True" />
-                    <ComboBoxItem Content="100" Tag="100" />
-                </ComboBox>
             </StackPanel>
             <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
                 <Button Content="First" Click="FirstPage_Click" x:Name="FirstBtn" />

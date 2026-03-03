@@ -211,7 +211,7 @@ public sealed partial class MyDevicePage : Page
 
     private async void PageSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (!_isLoaded || _suppressPageSizeEvent) return;
+        if (!_isLoaded) return;
         if (PageSizeComboBox?.SelectedItem is ComboBoxItem item && int.TryParse(item.Tag as string, out int size))
         {
             _vm.SetPageSize(size);
@@ -221,22 +221,21 @@ public sealed partial class MyDevicePage : Page
         }
     }
 
-    private bool _suppressPageSizeEvent;
-
     public async void SetPageSize(int size)
     {
         _vm.SetPageSize(size);
 
-        _suppressPageSizeEvent = true;
-        for (int i = 0; i < PageSizeComboBox.Items.Count; i++)
+        if (PageSizeComboBox != null)
         {
-            if (PageSizeComboBox.Items[i] is ComboBoxItem ci && ci.Tag as string == size.ToString())
+            for (int i = 0; i < PageSizeComboBox.Items.Count; i++)
             {
-                PageSizeComboBox.SelectedIndex = i;
-                break;
+                if (PageSizeComboBox.Items[i] is ComboBoxItem ci && ci.Tag as string == size.ToString())
+                {
+                    PageSizeComboBox.SelectedIndex = i;
+                    break;
+                }
             }
         }
-        _suppressPageSizeEvent = false;
 
         if (!_isLoaded) return;
         await _vm.LoadDataAsync();

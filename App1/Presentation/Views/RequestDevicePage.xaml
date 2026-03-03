@@ -13,34 +13,64 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Padding" Value="6,4" />
         </Style>
+        <Style x:Key="ModelCellStyle" BasedOn="{StaticResource WrapCellStyle}" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#3276B1" />
+        </Style>
     </Page.Resources>
 
-    <Grid Padding="20" RowDefinitions="Auto,*,Auto">
+    <Grid Padding="20" RowDefinitions="Auto,Auto,*,Auto">
 
         <TextBlock
             Grid.Row="0"
             Margin="0,0,0,12"
             FontSize="24"
             FontWeight="Bold"
-            Text="Model List" />
+            Text="Models List" />
 
-        <Border Grid.Row="1" BorderBrush="#CCCCCC" BorderThickness="1" CornerRadius="2">
-            <controls:DataGrid
+        <!-- Toolbar: Rows per page -->
+        <Grid Grid.Row="1" Margin="0,0,0,10" >
+            <StackPanel
+                Margin="0,0,25,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Center"
+                Orientation="Horizontal">
+                <Button
+                    Margin="0,0,8,0"
+                    Content="Rows per page"
+                    Foreground="Black"
+                    IsEnabled="False" />
+                <ComboBox
+                    x:Name="PageSizeComboBox"
+                    Width="70"
+                    SelectionChanged="PageSizeComboBox_SelectionChanged">
+                    <ComboBoxItem Content="10" Tag="10" />
+                    <ComboBoxItem Content="25" Tag="25" />
+                    <ComboBoxItem Content="50" Tag="50" IsSelected="True" />
+                    <ComboBoxItem Content="100" Tag="100" />
+                </ComboBox>
+            </StackPanel>
+        </Grid>
+
+        <controls:DataGrid
+            Grid.Row="2"
             x:Name="ModelDataGrid"
             AutoGenerateColumns="False"
+            BorderThickness="0"
+            CornerRadius="2"
             CanUserSortColumns="True"
             ColumnHeaderHeight="86"
             GridLinesVisibility="All"
             HorizontalGridLinesBrush="#DEDEDE"
+            VerticalGridLinesBrush="#DEDEDE"
             IsReadOnly="True"
             LoadingRow="DataGrid_LoadingRow"
             Sorting="DataGrid_Sorting"
-            VerticalGridLinesBrush="#DEDEDE">
+            >
 
             <controls:DataGrid.Columns>
                 <!-- Model -->
                 <controls:DataGridTextColumn Binding="{Binding Model}" Width="*"
-                                             ElementStyle="{StaticResource WrapCellStyle}">
+                                             ElementStyle="{StaticResource ModelCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
                             <Setter Property="ContentTemplate">
@@ -52,7 +82,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Model" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Model" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <TextBox VerticalAlignment="Center" PlaceholderText="Model" Tag="Model" TextChanged="FilterTextBox_TextChanged" />
@@ -79,7 +109,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Manufacturer" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Manufacturer" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <TextBox VerticalAlignment="Center" PlaceholderText="Manufacturer" Tag="Manufacturer" TextChanged="FilterTextBox_TextChanged" />
@@ -106,7 +136,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Category" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Category" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
@@ -136,7 +166,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Sub Category" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Sub Category" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
                                                 <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
@@ -166,7 +196,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Available" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Available" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" />
                                         </Grid>
@@ -191,7 +221,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Reserved" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Reserved" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" />
                                         </Grid>
@@ -202,73 +232,268 @@
                     </controls:DataGridTextColumn.HeaderStyle>
                 </controls:DataGridTextColumn>
 
-                <!-- Function -->
-                <controls:DataGridTemplateColumn Width="140">
-                    <controls:DataGridTemplateColumn.HeaderStyle>
-                        <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
-                            <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate>
-                                        <Grid>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="40" />
-                                                <RowDefinition Height="1" />
-                                                <RowDefinition Height="45" />
-                                            </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Function" />
-                                            <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
-                                                <Button HorizontalAlignment="Stretch" VerticalAlignment="Center" Content="Clear Filter" Click="ClearFilter_Click" />
+                    <!-- Function -->
+                    <controls:DataGridTemplateColumn Width="*">
+                        <controls:DataGridTemplateColumn.HeaderStyle>
+                            <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
+                                <Setter Property="ContentTemplate">
+                                    <Setter.Value>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="40" />
+                                                    <RowDefinition Height="1" />
+                                                    <RowDefinition Height="45" />
+                                                </Grid.RowDefinitions>
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Function" />
+                                                <Rectangle Grid.Row="1" Fill="LightGray" />
+                                                <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
+                                                    <Button
+                                                        BorderThickness="0"
+                                                        Foreground="#429CB6"
+                                                        MinWidth="100"
+                                                        MinHeight="36"
+                                                        CornerRadius="8"
+                                                        Padding="12,8"
+                                                        HorizontalAlignment="Stretch"
+                                                        VerticalAlignment="Center"
+                                                        Content="Clear Filter"
+                                                        Click="ClearFilter_Click">
+                                                        <Button.Style>
+                                                            <Style TargetType="Button">
+                                                                <Setter Property="Template">
+                                                                    <Setter.Value>
+                                                                        <ControlTemplate TargetType="Button">
+                                                                            <Border
+                                                                                x:Name="ClearFilterBorder"
+                                                                                Background="Transparent"
+                                                                                CornerRadius="8"
+                                                                                BorderThickness="1"
+                                                                                >
+                                                                                <TextBlock
+                                                                                    x:Name="ContentText"
+                                                                                    Text="{TemplateBinding Content}"
+                                                                                    Foreground="{TemplateBinding Foreground}"
+                                                                                    HorizontalAlignment="Center"
+                                                                                    VerticalAlignment="Center"
+                                                                                    Padding="12,8"/>
+                                                                                <VisualStateManager.VisualStateGroups>
+                                                                                    <VisualStateGroup x:Name="CommonStates">
+                                                                                        <VisualState x:Name="Normal"/>
+                                                                                        <VisualState x:Name="PointerOver">
+                                                                                            <Storyboard>
+                                                                                                <ColorAnimation
+                                                                                                    Storyboard.TargetName="ClearFilterBorder"
+                                                                                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                                                                    To="#429CB6"
+                                                                                                    Duration="0"/>
+                                                                                                <ColorAnimation
+                                                                                                    Storyboard.TargetName="ContentText"
+                                                                                                    Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                                                                                    To="White"
+                                                                                                    Duration="0"/>
+                                                                                            </Storyboard>
+                                                                                        </VisualState>
+                                                                                        <VisualState x:Name="Pressed">
+                                                                                            <Storyboard>
+                                                                                                <DoubleAnimation
+                                                                                                    Storyboard.TargetName="ContentText"
+                                                                                                    Storyboard.TargetProperty="Opacity"
+                                                                                                    To="0.7"
+                                                                                                    Duration="0"/>
+                                                                                            </Storyboard>
+                                                                                        </VisualState>
+                                                                                        <VisualState x:Name="Disabled">
+                                                                                            <Storyboard>
+                                                                                                <DoubleAnimation
+                                                                                                    Storyboard.TargetName="ContentText"
+                                                                                                    Storyboard.TargetProperty="Opacity"
+                                                                                                    To="0.5"
+                                                                                                    Duration="0"/>
+                                                                                            </Storyboard>
+                                                                                        </VisualState>
+                                                                                    </VisualStateGroup>
+                                                                                </VisualStateManager.VisualStateGroups>
+                                                                            </Border>
+                                                                        </ControlTemplate>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Style>
+                                                        </Button.Style>
+                                                    </Button>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </controls:DataGridTemplateColumn.HeaderStyle>
-                    <controls:DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Content="Borrow" Click="BorrowButton_Click"
-                                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    IsEnabled="{Binding Available, Converter={StaticResource AvailableToBoolConverter}}" />
-                        </DataTemplate>
-                    </controls:DataGridTemplateColumn.CellTemplate>
-                </controls:DataGridTemplateColumn>
-            </controls:DataGrid.Columns>
-        </controls:DataGrid>
-        </Border>
+                                        </DataTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </controls:DataGridTemplateColumn.HeaderStyle>
 
-        <!-- Pagination Bar -->
-        <Grid Grid.Row="2" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
-                <TextBlock x:Name="ShowingText" VerticalAlignment="Center" />
-                <TextBlock Text="  |  Rows per page:" VerticalAlignment="Center" Margin="8,0,4,0" />
-                <ComboBox x:Name="PageSizeComboBox" VerticalAlignment="Center" SelectionChanged="PageSizeComboBox_SelectionChanged" Width="80">
-                    <ComboBoxItem Content="10" Tag="10" />
-                    <ComboBoxItem Content="25" Tag="25" />
-                    <ComboBoxItem Content="50" Tag="50" IsSelected="True" />
-                    <ComboBoxItem Content="100" Tag="100" />
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                <Button Content="First" Click="FirstPage_Click" x:Name="FirstBtn" />
-                <Button Content="Previous" Click="PrevPage_Click" x:Name="PrevBtn" />
-                <ItemsRepeater x:Name="PageNumbersRepeater" ItemsSource="{x:Bind _vm.PageNumbers, Mode=OneWay}">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Horizontal" Spacing="2" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate>
-                            <Button MinWidth="36" MinHeight="36" HorizontalAlignment="Center"
-                                    Click="PageNumber_Click" Content="{Binding DisplayText}"
-                                    CornerRadius="18"
-                                    IsEnabled="{Binding IsClickable}" />
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-                <Button Content="Next" Click="NextPage_Click" x:Name="NextBtn" />
-                <Button Content="Last" Click="LastPage_Click" x:Name="LastBtn" />
-            </StackPanel>
-        </Grid>
+                        <controls:DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    FontSize="16"
+                                    CornerRadius="8"
+                                    MinWidth="100"
+                                    MinHeight="36"
+                                    Background="Transparent"
+                                    Click="BorrowButton_Click"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    IsEnabled="{Binding Available, Converter={StaticResource AvailableToBoolConverter}}">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border
+                                                            x:Name="BorrowBorder"
+                                                            Background="Transparent"
+                                                            CornerRadius="8"
+                                                            BorderThickness="1"
+                                                            >
+                                                            <StackPanel
+                                                                Orientation="Horizontal"
+                                                                Spacing="6"
+                                                                HorizontalAlignment="Center"
+                                                                VerticalAlignment="Center"
+                                                                Padding="12,8">
+                                                                <!-- Android SVG Path inline -->
+                                                                <Viewbox Width="18" Height="18" VerticalAlignment="Center">
+                                                                    <Path
+                                                                        x:Name="AndroidIcon"
+                                                                        Data="M17.523 15.341 C17.523 15.341 17.341 15.523 17.341 15.523
+                                                                              M6 18 L6 22 C6 22.552 6.448 23 7 23
+                                                                              C7.552 23 8 22.552 8 22 L8 18 Z
+                                                                              M16 18 L16 22 C16 22.552 16.448 23 17 23
+                                                                              C17.552 23 18 22.552 18 22 L18 18 Z
+                                                                              M2 9 C2 8.448 2.448 8 3 8
+                                                                              C3.552 8 4 8.448 4 9 L4 16
+                                                                              C4 16.552 3.552 17 3 17
+                                                                              C2.448 17 2 16.552 2 16 Z
+                                                                              M20 9 C20 8.448 20.448 8 21 8
+                                                                              C21.552 8 22 8.448 22 9 L22 16
+                                                                              C22 16.552 21.552 17 21 17
+                                                                              C20.448 17 20 16.552 20 16 Z
+                                                                              M5 8 L5 17 C5 17.552 5.448 18 6 18
+                                                                              L18 18 C18.552 18 19 17.552 19 17
+                                                                              L19 8 Z
+                                                                              M9.5 5 C9.5 4.724 9.724 4.5 10 4.5
+                                                                              C10.276 4.5 10.5 4.724 10.5 5
+                                                                              C10.5 5.276 10.276 5.5 10 5.5
+                                                                              C9.724 5.5 9.5 5.276 9.5 5 Z
+                                                                              M13.5 5 C13.5 4.724 13.724 4.5 14 4.5
+                                                                              C14.276 4.5 14.5 4.724 14.5 5
+                                                                              C14.5 5.276 14.276 5.5 14 5.5
+                                                                              C13.724 5.5 13.5 5.276 13.5 5 Z
+                                                                              M8.293 2.293 L6.293 4.293
+                                                                              C6.098 4.488 6.098 4.805 6.293 5
+                                                                              C6.488 5.195 6.805 5.195 7 5
+                                                                              L9 3 C9.195 2.805 9.195 2.488 9 2.293
+                                                                              C8.805 2.098 8.488 2.098 8.293 2.293 Z
+                                                                              M15.707 2.293 C15.512 2.098 15.195 2.098 15 2.293
+                                                                              C14.805 2.488 14.805 2.805 15 3
+                                                                              L17 5 C17.195 5.195 17.512 5.195 17.707 5
+                                                                              C17.902 4.805 17.902 4.488 17.707 4.293 Z"
+                                                                        Stretch="Uniform"
+                                                                        Width="18"
+                                                                        Height="18">    
+                                                                        <Path.Fill>
+                                                                            <SolidColorBrush x:Name="AndroidIconFill" Color="#54B07D"/>
+                                                                        </Path.Fill>
+                                                                    </Path>
+                                                                </Viewbox>
+
+                                                                <TextBlock
+                                                                    x:Name="BorrowText"
+                                                                    Text="Borrow"
+                                                                    Foreground="#54B07D"
+                                                                    VerticalAlignment="Center"/>
+                                                            </StackPanel>
+
+                                                            <VisualStateManager.VisualStateGroups>
+                                                                <VisualStateGroup x:Name="CommonStates">
+                                                                    <VisualState x:Name="Normal"/>
+                                                                    <VisualState x:Name="PointerOver">
+                                                                        <Storyboard>
+                                                                            <ColorAnimation
+                                                                                Storyboard.TargetName="BorrowBorder"
+                                                                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                                                To="#54B07D" Duration="0"/>
+                                                                                                    <ColorAnimation
+                                                                                Storyboard.TargetName="AndroidIconFill"
+                                                                                Storyboard.TargetProperty="Color"
+                                                                                To="White" Duration="0"/>
+                                                                                                <ColorAnimation
+                                                                                Storyboard.TargetName="BorrowText"
+                                                                                Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                                                                To="White" Duration="0"/>           
+                                                                        </Storyboard>
+                                                                    </VisualState>
+                                                                    <VisualState x:Name="Pressed">
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation
+                                                                                Storyboard.TargetName="BorrowBorder"
+                                                                                Storyboard.TargetProperty="Opacity"
+                                                                                To="0.7" Duration="0"/>
+                                                                                                </Storyboard>
+                                                                                            </VisualState>
+                                                                                            <VisualState x:Name="Disabled">
+                                                                                                <Storyboard>
+                                                                                                    <DoubleAnimation
+                                                                                Storyboard.TargetName="BorrowBorder"
+                                                                                Storyboard.TargetProperty="Opacity"
+                                                                                To="0.5" Duration="0"/>
+                                                                        </Storyboard>
+                                                                    </VisualState>
+                                                                </VisualStateGroup>
+                                                            </VisualStateManager.VisualStateGroups>
+                                                        </Border>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </Button.Style>
+                                </Button>
+                            </DataTemplate>
+                        </controls:DataGridTemplateColumn.CellTemplate>
+                    </controls:DataGridTemplateColumn>
+                </controls:DataGrid.Columns>
+        </controls:DataGrid>
+
+        
+        
+
+        <Border Grid.Row="3" Background="#ccc"  Padding="8,6" >
+            <!-- Pagination Bar -->
+            <Grid ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
+                    <TextBlock x:Name="ShowingText" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="First" Click="FirstPage_Click" x:Name="FirstBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                    <Button Content="Previous" Click="PrevPage_Click" x:Name="PrevBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                    <ItemsRepeater x:Name="PageNumbersRepeater" ItemsSource="{x:Bind _vm.PageNumbers, Mode=OneWay}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout                               
+                                Orientation="Horizontal" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Button 
+                                        Background="#5E8283"
+                                        Foreground="White"
+                                        MinWidth="28" MinHeight="28" HorizontalAlignment="Center"
+                                        Click="PageNumber_Click" Content="{Binding DisplayText}"
+                                        CornerRadius="14" FontSize="12" Padding="4,2"
+                                        IsEnabled="{Binding IsClickable}" />
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                    <Button Content="Next" Click="NextPage_Click" x:Name="NextBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                    <Button Content="Last" Click="LastPage_Click" x:Name="LastBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </Page>

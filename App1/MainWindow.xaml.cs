@@ -14,7 +14,6 @@ public sealed partial class MainWindow : Window
         InitializeComponent();
         ContentFrame.Navigate(typeof(RequestDevicePage));
         SidebarMenu.SelectedIndex = 0;
-        ApplyPageSizeToCurrentPage();
     }
 
     private void SidebarMenu_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -31,7 +30,6 @@ public sealed partial class MainWindow : Window
                     ContentFrame.Navigate(typeof(MyDevicePage));
                     break;
             }
-            ApplyPageSizeToCurrentPage();
         }
     }
 
@@ -41,21 +39,5 @@ public sealed partial class MainWindow : Window
         SidebarColumn.Width = _sidebarExpanded
             ? new GridLength(220)
             : new GridLength(0);
-    }
-
-    private void PageSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        ApplyPageSizeToCurrentPage();
-    }
-
-    private void ApplyPageSizeToCurrentPage()
-    {
-        if (PageSizeComboBox?.SelectedItem is not ComboBoxItem ci) return;
-        if (!int.TryParse(ci.Tag as string, out int size)) return;
-
-        if (ContentFrame?.Content is RequestDevicePage rdp)
-            rdp.SetPageSize(size);
-        else if (ContentFrame?.Content is MyDevicePage mdp)
-            mdp.SetPageSize(size);
     }
 }
