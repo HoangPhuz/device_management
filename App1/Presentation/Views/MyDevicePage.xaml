@@ -416,7 +416,7 @@
                             <DataTemplate>
                                 <Button MinWidth="28" MinHeight="28" HorizontalAlignment="Center"
                                     Click="PageNumber_Click" Content="{Binding DisplayText}"
-                                     CornerRadius="14" FontSize="12" Padding="4,2"
+                                    CornerRadius="14" FontSize="12" Padding="4,2"
                                     IsEnabled="{Binding IsClickable}" />
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>

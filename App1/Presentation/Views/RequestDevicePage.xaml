@@ -362,7 +362,7 @@
                                                                 <Viewbox Width="18" Height="18" VerticalAlignment="Center">
                                                                     <Path
                                                                         x:Name="AndroidIcon"
-                                                                        Data="M17.523 15.341 C17.523 15.341 17.341 15.523 17.341 15.523
+                                                                        Data="M5 8 C5 4.13 8.13 1 12 1 C15.87 1 19 4.13 19 8 Z
                                                                               M6 18 L6 22 C6 22.552 6.448 23 7 23
                                                                               C7.552 23 8 22.552 8 22 L8 18 Z
                                                                               M16 18 L16 22 C16 22.552 16.448 23 17 23

@@ -145,18 +145,127 @@ public sealed partial class MyDevicePage : Page
         if (selected.Count > 20)
             sb.AppendLine($"  ... and {selected.Count - 20} more");
 
-        var dialog = new ContentDialog
+        // === Title bar ===
+        var titleBar = new Grid
         {
-            Title = "Return Devices",
-            Content = new TextBlock { Text = sb.ToString(), TextWrapping = TextWrapping.Wrap },
-            PrimaryButtonText = "Confirm",
-            CloseButtonText = "Cancel",
-            XamlRoot = this.XamlRoot,
-            DefaultButton = ContentDialogButton.Primary
+            Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 86, 107, 127)), // #566B7F
+            Height = 44,
+            CornerRadius = new CornerRadius(8, 8, 0, 0),
+            ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto }
+            }
         };
 
-        var result = await dialog.ShowAsync();
-        if (result == ContentDialogResult.Primary)
+        var titleText = new TextBlock
+        {
+            Text = "Return Devices",
+            Foreground = new SolidColorBrush(Colors.White),
+            FontWeight = Microsoft.UI.Text.FontWeights.Bold,
+            FontSize = 15,
+            VerticalAlignment = VerticalAlignment.Center,
+            Margin = new Thickness(16, 0, 0, 0)
+        };
+        Grid.SetColumn(titleText, 0);
+        titleBar.Children.Add(titleText);
+
+        var closeBtn = new Button
+        {
+            Content = new FontIcon { Glyph = "\uE8BB", FontSize = 12 },
+            Style = (Style)Application.Current.Resources["DialogCloseButtonStyle"],
+            Margin = new Thickness(0, 0, 6, 0)
+        };
+        Grid.SetColumn(closeBtn, 1);
+        titleBar.Children.Add(closeBtn);
+
+        // === Content card ===
+        var contentText = new TextBlock
+        {
+            Text = sb.ToString(),
+            TextWrapping = TextWrapping.Wrap,
+            FontSize = 14
+        };
+
+        var contentBorder = new Border
+        {
+            Background = new SolidColorBrush(Colors.White),
+            CornerRadius = new CornerRadius(8),
+            Padding = new Thickness(24, 20, 24, 20),
+            Margin = new Thickness(24, 24, 24, 16),
+            Child = contentText
+        };
+
+        // === Buttons ===
+        var cancelBtn = new Button
+        {
+            Content = "Cancel",
+            MinWidth = 90,
+            Height = 34,
+            CornerRadius = new CornerRadius(6),
+            Margin = new Thickness(0, 0, 10, 0),
+            FontSize = 13,
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        var okBtn = new Button
+        {
+            Content = "Confirm",
+            MinWidth = 90,
+            Height = 34,
+            CornerRadius = new CornerRadius(6),
+            FontSize = 13,
+            Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 84, 176, 125)), // #54B07D
+            Foreground = new SolidColorBrush(Colors.White),
+            HorizontalAlignment = HorizontalAlignment.Right
+        };
+        var buttonPanel = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Margin = new Thickness(0, 0, 24, 20)
+        };
+        buttonPanel.Children.Add(cancelBtn);
+        buttonPanel.Children.Add(okBtn);
+
+        // === Body ===
+        var bodyStack = new StackPanel
+        {
+            Background = new SolidColorBrush(Windows.UI.Color.FromArgb(255, 240, 240, 240)) // #F0F0F0
+        };
+        bodyStack.Children.Add(contentBorder);
+        bodyStack.Children.Add(buttonPanel);
+
+        var outerStack = new StackPanel();
+        outerStack.Children.Add(titleBar);
+        outerStack.Children.Add(bodyStack);
+
+        var dialog = new ContentDialog
+        {
+            Content = outerStack,
+            XamlRoot = this.XamlRoot,
+            Padding = new Thickness(0),
+            BorderThickness = new Thickness(0),
+            Background = new SolidColorBrush(Colors.Transparent),
+            Resources =
+            {
+                ["ContentDialogPadding"] = new Thickness(0),
+                ["ContentDialogMinWidth"] = 520.0,
+                ["ContentDialogMaxWidth"] = 560.0,
+            }
+        };
+
+        // Wire up buttons
+        cancelBtn.Click += (_, _) => dialog.Hide();
+        closeBtn.Click += (_, _) => dialog.Hide();
+        ContentDialogResult dialogResult = ContentDialogResult.None;
+        okBtn.Click += (_, _) =>
+        {
+            dialogResult = ContentDialogResult.Primary;
+            dialog.Hide();
+        };
+
+        await dialog.ShowAsync();
+        if (dialogResult == ContentDialogResult.Primary)
         {
             await _vm.ReturnSelectedAsync();
             ReturnSelectedBtn.IsEnabled = false;
