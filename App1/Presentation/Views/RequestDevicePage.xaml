@@ -481,8 +481,7 @@
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate>
                                 <Button 
-                                        Background="#5E8283"
-                                        Foreground="White"
+                                     
                                         MinWidth="28" MinHeight="28" HorizontalAlignment="Center"
                                         Click="PageNumber_Click" Content="{Binding DisplayText}"
                                         CornerRadius="14" FontSize="12" Padding="4,2"

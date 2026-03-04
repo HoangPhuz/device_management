@@ -33,7 +33,7 @@
             IsEnabled="False" />
 
         <!-- Toolbar: Rows per page -->
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="1" Margin="0,0,0,10">
             <StackPanel
                 Margin="0,0,25,0"
                 HorizontalAlignment="Right"
@@ -120,10 +120,10 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Model Name" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Model Name" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
-                                                <TextBox VerticalAlignment="Center" PlaceholderText="Filter..." Tag="ModelName" TextChanged="FilterTextBox_TextChanged" />
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Model Name" Tag="ModelName" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
@@ -147,9 +147,11 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="IMEI" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="IMEI" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="White" />
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="IMEI" Tag="IMEI" TextChanged="FilterTextBox_TextChanged" />
+                                            </Grid>
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -172,9 +174,11 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Label" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Label" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="White" />
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Serial Lab" Tag="SerialLab" TextChanged="FilterTextBox_TextChanged" />
+                                            </Grid>
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -197,9 +201,11 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Serial Number" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Serial Number" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="White" />
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Serial Number" Tag="SerialNumber" TextChanged="FilterTextBox_TextChanged" />
+                                            </Grid>
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -222,9 +228,11 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Circuit S/N" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Circuit S/N" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="White" />
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Circuit Serial Number" Tag="CircuitSerialNumber" TextChanged="FilterTextBox_TextChanged" />
+                                            </Grid>
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -247,9 +255,11 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="H/W Ver." />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="H/W Ver." />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Background="White" />
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="HW Ver" Tag="HWVer" TextChanged="FilterTextBox_TextChanged" />
+                                            </Grid>
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -272,7 +282,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Borrowed Date" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Borrowed Date" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" />
                                         </Grid>
@@ -297,7 +307,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Return Date" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Return Date" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" />
                                         </Grid>
@@ -322,7 +332,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Invoice" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Invoice" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" />
                                         </Grid>
@@ -347,16 +357,10 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Status" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Status" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
-                                                <ComboBox HorizontalAlignment="Stretch" VerticalAlignment="Center"
-                                                          PlaceholderText="-- All --"
-                                                          Loaded="StatusComboBox_Loaded"
-                                                          SelectionChanged="StatusComboBox_SelectionChanged">
-                                                    <ComboBoxItem Content="-- All --" Tag="" />
-                                                    <ComboBoxItem Content="Occupied" Tag="Occupied" />
-                                                </ComboBox>
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Status" Tag="Status" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
@@ -380,10 +384,10 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#566b7f" Text="Inventory" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Inventory" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
-                                            <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
-                                                <Button HorizontalAlignment="Stretch" VerticalAlignment="Center" Content="Clear Filter" Click="ClearFilter_Click" />
+                                            <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Inventory" Tag="Inventory" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
@@ -396,29 +400,34 @@
         </controls:DataGrid>
 
         <!-- Pagination Bar -->
-        <Grid Grid.Row="4" Margin="0,8,0,0" ColumnDefinitions="*,Auto">
-            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
-                <TextBlock x:Name="ShowingText" VerticalAlignment="Center" />
-            </StackPanel>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="4" VerticalAlignment="Center">
-                <Button Content="First" Click="FirstPage_Click" x:Name="FirstBtn" />
-                <Button Content="Previous" Click="PrevPage_Click" x:Name="PrevBtn" />
-                <ItemsRepeater x:Name="PageNumbersRepeater" ItemsSource="{x:Bind _vm.PageNumbers, Mode=OneWay}">
-                    <ItemsRepeater.Layout>
-                        <StackLayout Orientation="Horizontal" Spacing="2" />
-                    </ItemsRepeater.Layout>
-                    <ItemsRepeater.ItemTemplate>
-                        <DataTemplate>
-                            <Button MinWidth="36" MinHeight="36" HorizontalAlignment="Center"
+        <Border Grid.Row="4" Background="#ccc"  Padding="8,6">
+            <Grid  ColumnDefinitions="*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="4">
+                    <TextBlock x:Name="ShowingText" VerticalAlignment="Center" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="First" Click="FirstPage_Click" x:Name="FirstBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                    <Button Content="Previous" Click="PrevPage_Click" x:Name="PrevBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                    <ItemsRepeater x:Name="PageNumbersRepeater" ItemsSource="{x:Bind _vm.PageNumbers, Mode=OneWay}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Horizontal"  />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Button MinWidth="28" MinHeight="28" HorizontalAlignment="Center"
                                     Click="PageNumber_Click" Content="{Binding DisplayText}"
-                                    CornerRadius="18"
+                                     CornerRadius="14" FontSize="12" Padding="4,2"
                                     IsEnabled="{Binding IsClickable}" />
-                        </DataTemplate>
-                    </ItemsRepeater.ItemTemplate>
-                </ItemsRepeater>
-                <Button Content="Next" Click="NextPage_Click" x:Name="NextBtn" />
-                <Button Content="Last" Click="LastPage_Click" x:Name="LastBtn" />
-            </StackPanel>
-        </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                    <Button Content="Next" Click="NextPage_Click" x:Name="NextBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                    <Button Content="Last" Click="LastPage_Click" x:Name="LastBtn" CornerRadius="15" Padding="8,4" FontSize="12" />
+                </StackPanel>
+            </Grid>
+        </Border>
+        
+        
+
     </Grid>
 </Page>
