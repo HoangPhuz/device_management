@@ -38,13 +38,13 @@ public partial class App : Application
         // Data Layer
         services.AddSingleton<ISqliteDataSource, SqliteDataSource>();
         services.AddSingleton<IDeviceModelRepository, DeviceModelRepository>();
-        services.AddSingleton<IBorrowedDeviceRepository, BorrowedDeviceRepository>();
+        services.AddSingleton<IDeviceRepository, DeviceRepository>();
 
         // Domain Layer - Use Cases
         services.AddTransient<GetDeviceModelsUseCase>();
         services.AddTransient<BorrowDeviceUseCase>();
         services.AddTransient<ReturnDeviceUseCase>();
-        services.AddTransient<GetBorrowedDevicesUseCase>();
+        services.AddTransient<GetDevicesUseCase>();
         services.AddTransient<GetCategoriesUseCase>();
 
         // Infrastructure

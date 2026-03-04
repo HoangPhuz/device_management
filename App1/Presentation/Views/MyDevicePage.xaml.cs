@@ -54,7 +54,7 @@ public sealed partial class MyDevicePage : Page
         try { await System.Threading.Tasks.Task.Delay(300, token); }
         catch (System.Threading.Tasks.TaskCanceledException) { return; }
 
-        if (tag == "ModelName") _vm.FilterModelName = tb.Text;
+        if (tag == "Name") _vm.FilterName = tb.Text;
 
         _vm.ApplyFilter();
         await _vm.LoadDataAsync();
@@ -97,7 +97,7 @@ public sealed partial class MyDevicePage : Page
         foreach (var c in DeviceDataGrid.Columns)
             if (c != col) c.SortDirection = null;
 
-        string[] colNames = { "", "ModelName", "IMEI", "Label", "SerialNumber", "CircuitSerialNumber",
+        string[] colNames = { "", "Name", "IMEI", "SerialLab", "SerialNumber", "CircuitSerialNumber",
                               "HWVersion", "BorrowedDate", "ReturnDate", "Invoice", "Status", "Inventory" };
         var idx = DeviceDataGrid.Columns.IndexOf(col);
         if (idx >= 1 && idx < colNames.Length)
@@ -141,7 +141,7 @@ public sealed partial class MyDevicePage : Page
         sb.AppendLine($"You are about to return {selected.Count} device(s):");
         sb.AppendLine();
         foreach (var d in selected.Take(20))
-            sb.AppendLine($"  - {d.ModelName} (IMEI: {d.IMEI})");
+            sb.AppendLine($"  - {d.Name} (IMEI: {d.IMEI})");
         if (selected.Count > 20)
             sb.AppendLine($"  ... and {selected.Count - 20} more");
 

@@ -1,0 +1,22 @@
+[
+    {
+        "Id": "da4160e9-d22a-480b-982e-1c55b7d80000000",
+        "ModelId": "da4160e9-d22a-480b-982e-1c55b7d80873",
+        "Name": "iphone 13",
+        "IMEI": "123456789012345",
+        "SerialLab": "123123",
+        "SerialNumber": "SN-0000000",
+        "CircuitSerialNumber": "CS-0000000",
+        "HWVersion": "v1.0"
+    },
+    {
+        "Id": "da4160e9-d22a-480b-982e-1c55b7d80000003",
+        "ModelId": "724381b5-6dcc-4d68-b608-f137686ec8bf",
+        "Name": "Samsung Galaxy S22",
+        "IMEI": "1234567890123477",
+        "SerialLab": "1231211",
+        "SerialNumber": "SN-00000011",
+        "CircuitSerialNumber": "CS-00000011",
+        "HWVersion": "v22.0"
+    }
+]

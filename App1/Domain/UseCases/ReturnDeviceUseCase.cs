@@ -6,10 +6,10 @@ namespace App1.Domain.UseCases;
 
 public class ReturnDeviceUseCase
 {
-    private readonly IBorrowedDeviceRepository _repo;
+    private readonly IDeviceRepository _repo;
 
-    public ReturnDeviceUseCase(IBorrowedDeviceRepository repo) => _repo = repo;
+    public ReturnDeviceUseCase(IDeviceRepository repo) => _repo = repo;
 
-    public Task<bool> ExecuteAsync(List<long> deviceIds)
+    public Task<bool> ExecuteAsync(List<string> deviceIds)
         => _repo.ReturnAsync(deviceIds);
 }

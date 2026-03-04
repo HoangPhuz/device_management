@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using App1.Domain.Entities;
 using App1.Domain.UseCases;
@@ -39,7 +38,7 @@ public partial class RequestDeviceViewModel : ObservableObject
     [ObservableProperty] private int _pageSize = 50;
     [ObservableProperty] private ObservableCollection<PageItem> _pageNumbers = new();
 
-    [ObservableProperty] private string _filterModel = string.Empty;
+    [ObservableProperty] private string _filterName = string.Empty;
     [ObservableProperty] private string _filterManufacturer = string.Empty;
     [ObservableProperty] private string _filterCategory = string.Empty;
     [ObservableProperty] private string _filterSubCategory = string.Empty;
@@ -93,8 +92,8 @@ public partial class RequestDeviceViewModel : ObservableObject
             Filters = new Dictionary<string, string>()
         };
 
-        if (!string.IsNullOrWhiteSpace(FilterModel))
-            query.Filters["Model"] = FilterModel;
+        if (!string.IsNullOrWhiteSpace(FilterName))
+            query.Filters["Name"] = FilterName;
         if (!string.IsNullOrWhiteSpace(FilterManufacturer))
             query.Filters["Manufacturer"] = FilterManufacturer;
         if (!string.IsNullOrWhiteSpace(FilterCategory))
@@ -112,7 +111,7 @@ public partial class RequestDeviceViewModel : ObservableObject
         GeneratePageNumbers();
     }
 
-    public async Task<bool> BorrowAsync(long modelId, int quantity)
+    public async Task<bool> BorrowAsync(string modelId, int quantity)
     {
         var success = await _borrow.ExecuteAsync(modelId, quantity, App.InstanceId);
         if (success)
@@ -137,7 +136,7 @@ public partial class RequestDeviceViewModel : ObservableObject
 
     public void ClearFilters()
     {
-        FilterModel = string.Empty;
+        FilterName = string.Empty;
         FilterManufacturer = string.Empty;
         FilterCategory = string.Empty;
         FilterSubCategory = string.Empty;

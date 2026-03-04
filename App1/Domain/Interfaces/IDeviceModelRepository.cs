@@ -10,5 +10,5 @@ public interface IDeviceModelRepository
     Task<PagedResult<DeviceModel>> GetPagedAsync(QueryParameters query);
     Task<List<string>> GetDistinctCategoriesAsync();
     Task<List<string>> GetDistinctSubCategoriesAsync(string? category = null);
-    Task<bool> BorrowAsync(long modelId, int quantity, string instanceId);
+    Task<bool> BorrowAsync(string modelId, int quantity, string instanceId);
 }

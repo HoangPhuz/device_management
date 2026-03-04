@@ -106,8 +106,8 @@
                     </controls:DataGridTemplateColumn.CellTemplate>
                 </controls:DataGridTemplateColumn>
 
-                <!-- Model Name -->
-                <controls:DataGridTextColumn Binding="{Binding ModelName}" Width="2.5*" MinWidth="140"
+                <!-- Name -->
+                <controls:DataGridTextColumn Binding="{Binding Name}" Width="2.5*" MinWidth="140"
                                              ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
@@ -120,10 +120,10 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Model Name" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Device Name" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
-                                                <TextBox VerticalAlignment="Center" PlaceholderText="Model Name" Tag="ModelName" TextChanged="FilterTextBox_TextChanged" />
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Device Name" Tag="Name" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
@@ -160,8 +160,8 @@
                     </controls:DataGridTextColumn.HeaderStyle>
                 </controls:DataGridTextColumn>
 
-                <!-- Label -->
-                <controls:DataGridTextColumn Binding="{Binding Label}" Width="1.5*" MinWidth="80"
+                <!-- Serial Lab -->
+                <controls:DataGridTextColumn Binding="{Binding SerialLab}" Width="1.5*" MinWidth="80"
                                              ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
@@ -174,7 +174,7 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Label" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Serial Lab" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
                                                 <TextBox VerticalAlignment="Center" PlaceholderText="Serial Lab" Tag="SerialLab" TextChanged="FilterTextBox_TextChanged" />
@@ -370,7 +370,7 @@
                     </controls:DataGridTextColumn.HeaderStyle>
                 </controls:DataGridTextColumn>
 
-                <!-- Inventory + Clear Filter -->
+                <!-- Inventory -->
                 <controls:DataGridTextColumn Binding="{Binding Inventory}" Width="1.2*" MinWidth="80"
                                              ElementStyle="{StaticResource WrapCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>

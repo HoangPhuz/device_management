@@ -136,7 +136,7 @@ public sealed partial class RequestDevicePage : Page
 
         switch (tag)
         {
-            case "Model": _vm.FilterModel = tb.Text; break;
+            case "Name": _vm.FilterName = tb.Text; break;
             case "Manufacturer": _vm.FilterManufacturer = tb.Text; break;
         }
 
@@ -182,7 +182,7 @@ public sealed partial class RequestDevicePage : Page
         foreach (var c in ModelDataGrid.Columns)
             if (c != col) c.SortDirection = null;
 
-        string[] colNames = { "Model", "Manufacturer", "Category", "SubCategory", "Available", "Reserved" };
+        string[] colNames = { "Name", "Manufacturer", "Category", "SubCategory", "Available", "Reserved" };
         var idx = ModelDataGrid.Columns.IndexOf(col);
         if (idx >= 0 && idx < colNames.Length)
         {
@@ -236,7 +236,7 @@ public sealed partial class RequestDevicePage : Page
 
         // === Content form ===
         var content = new StackPanel { Spacing = 4 };
-        content.Children.Add(MakeRow("Model", model.Model));
+        content.Children.Add(MakeRow("Model", model.Name));
         content.Children.Add(MakeRow("Manufacturer", model.Manufacturer));
         content.Children.Add(MakeRow("Category", $"{model.Category} / {model.SubCategory}"));
         content.Children.Add(MakeRow("Available", model.Available.ToString()));

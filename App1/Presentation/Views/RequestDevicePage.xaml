@@ -68,8 +68,8 @@
             >
 
             <controls:DataGrid.Columns>
-                <!-- Model -->
-                <controls:DataGridTextColumn Binding="{Binding Model}" Width="*"
+                <!-- Name -->
+                <controls:DataGridTextColumn Binding="{Binding Name}" Width="*"
                                              ElementStyle="{StaticResource ModelCellStyle}">
                     <controls:DataGridTextColumn.HeaderStyle>
                         <Style BasedOn="{StaticResource BaseColHeaderStyle}" TargetType="primitives:DataGridColumnHeader">
@@ -82,10 +82,10 @@
                                                 <RowDefinition Height="1" />
                                                 <RowDefinition Height="45" />
                                             </Grid.RowDefinitions>
-                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Model" />
+                                            <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="Name" />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Padding="4,0" Background="White" PointerPressed="FilterArea_PointerPressed">
-                                                <TextBox VerticalAlignment="Center" PlaceholderText="Model" Tag="Model" TextChanged="FilterTextBox_TextChanged" />
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="Name" Tag="Name" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>

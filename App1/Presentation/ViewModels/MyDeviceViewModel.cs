@@ -14,15 +14,15 @@ namespace App1.Presentation.ViewModels;
 
 public partial class SelectableDevice : ObservableObject
 {
-    public BorrowedDevice Device { get; }
+    public Device Device { get; }
     [ObservableProperty] private bool _isSelected;
 
-    public SelectableDevice(BorrowedDevice device) => Device = device;
+    public SelectableDevice(Device device) => Device = device;
 
-    public long Id => Device.Id;
-    public string ModelName => Device.ModelName;
+    public string Id => Device.Id;
+    public string Name => Device.Name;
     public string IMEI => Device.IMEI;
-    public string Label => Device.Label;
+    public string SerialLab => Device.SerialLab;
     public string SerialNumber => Device.SerialNumber;
     public string CircuitSerialNumber => Device.CircuitSerialNumber;
     public string HWVersion => Device.HWVersion;
@@ -35,16 +35,16 @@ public partial class SelectableDevice : ObservableObject
 
 public partial class MyDeviceViewModel : ObservableObject
 {
-    private readonly GetBorrowedDevicesUseCase _getBorrowed;
+    private readonly GetDevicesUseCase _getDevices;
     private readonly ReturnDeviceUseCase _return;
     private readonly SyncService _sync;
 
     public MyDeviceViewModel(
-        GetBorrowedDevicesUseCase getBorrowed,
+        GetDevicesUseCase getDevices,
         ReturnDeviceUseCase returnDevice,
         SyncService sync)
     {
-        _getBorrowed = getBorrowed;
+        _getDevices = getDevices;
         _return = returnDevice;
         _sync = sync;
         _sync.DataChanged += OnSyncDataChanged;
@@ -57,7 +57,7 @@ public partial class MyDeviceViewModel : ObservableObject
     [ObservableProperty] private int _pageSize = 50;
     [ObservableProperty] private ObservableCollection<PageItem> _pageNumbers = new();
 
-    [ObservableProperty] private string _filterModelName = string.Empty;
+    [ObservableProperty] private string _filterName = string.Empty;
     [ObservableProperty] private string _filterStatus = string.Empty;
 
     [ObservableProperty] private string? _sortColumn;
@@ -95,12 +95,12 @@ public partial class MyDeviceViewModel : ObservableObject
             Filters = new Dictionary<string, string>()
         };
 
-        if (!string.IsNullOrWhiteSpace(FilterModelName))
-            query.Filters["ModelName"] = FilterModelName;
+        if (!string.IsNullOrWhiteSpace(FilterName))
+            query.Filters["Name"] = FilterName;
         if (!string.IsNullOrWhiteSpace(FilterStatus))
             query.Filters["Status"] = FilterStatus;
 
-        var result = await _getBorrowed.ExecuteAsync(query, App.InstanceId);
+        var result = await _getDevices.ExecuteAsync(query, App.InstanceId);
 
         Items = new ObservableCollection<SelectableDevice>(
             result.Items.Select(d => new SelectableDevice(d)));
@@ -140,7 +140,7 @@ public partial class MyDeviceViewModel : ObservableObject
 
     public void ClearFilters()
     {
-        FilterModelName = string.Empty;
+        FilterName = string.Empty;
         FilterStatus = string.Empty;
         CurrentPage = 1;
     }

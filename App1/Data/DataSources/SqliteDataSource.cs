@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
 using App1.Data.Interfaces;
 using Microsoft.Data.Sqlite;
@@ -36,9 +37,9 @@ public class SqliteDataSource : ISqliteDataSource
 
         using var createCmd = conn.CreateCommand();
         createCmd.CommandText = @"
-            CREATE TABLE IF NOT EXISTS DeviceModels (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                Model TEXT NOT NULL,
+            CREATE TABLE IF NOT EXISTS Models (
+                Id TEXT PRIMARY KEY,
+                Name TEXT NOT NULL,
                 Manufacturer TEXT NOT NULL,
                 Category TEXT NOT NULL,
                 SubCategory TEXT NOT NULL,
@@ -46,35 +47,36 @@ public class SqliteDataSource : ISqliteDataSource
                 Reserved INTEGER NOT NULL DEFAULT 0
             );
 
-            CREATE TABLE IF NOT EXISTS BorrowedDevices (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                DeviceModelId INTEGER NOT NULL,
-                ModelName TEXT NOT NULL,
+            CREATE TABLE IF NOT EXISTS Devices (
+                Id TEXT PRIMARY KEY,
+                ModelId TEXT NOT NULL,
+                Name TEXT NOT NULL,
                 IMEI TEXT NOT NULL,
-                Label TEXT NOT NULL,
+                SerialLab TEXT NOT NULL,
                 SerialNumber TEXT NOT NULL,
                 CircuitSerialNumber TEXT NOT NULL,
                 HWVersion TEXT NOT NULL,
-                BorrowedDate TEXT NOT NULL,
+                Status TEXT NOT NULL DEFAULT 'Available',
+                BorrowedDate TEXT NOT NULL DEFAULT '',
                 ReturnDate TEXT NOT NULL DEFAULT '',
                 Invoice TEXT NOT NULL DEFAULT '',
-                Status TEXT NOT NULL DEFAULT 'Occupied',
                 Inventory TEXT NOT NULL DEFAULT '',
-                InstanceId TEXT NOT NULL,
-                FOREIGN KEY (DeviceModelId) REFERENCES DeviceModels(Id)
+                InstanceId TEXT NOT NULL DEFAULT '',
+                FOREIGN KEY (ModelId) REFERENCES Models(Id)
             );
 
-            CREATE INDEX IF NOT EXISTS idx_dm_model ON DeviceModels(Model);
-            CREATE INDEX IF NOT EXISTS idx_dm_manufacturer ON DeviceModels(Manufacturer);
-            CREATE INDEX IF NOT EXISTS idx_dm_category ON DeviceModels(Category);
-            CREATE INDEX IF NOT EXISTS idx_dm_subcategory ON DeviceModels(SubCategory);
-            CREATE INDEX IF NOT EXISTS idx_bd_instanceid ON BorrowedDevices(InstanceId);
-            CREATE INDEX IF NOT EXISTS idx_bd_modelid ON BorrowedDevices(DeviceModelId);
+            CREATE INDEX IF NOT EXISTS idx_models_name ON Models(Name);
+            CREATE INDEX IF NOT EXISTS idx_models_manufacturer ON Models(Manufacturer);
+            CREATE INDEX IF NOT EXISTS idx_models_category ON Models(Category);
+            CREATE INDEX IF NOT EXISTS idx_models_subcategory ON Models(SubCategory);
+            CREATE INDEX IF NOT EXISTS idx_devices_modelid ON Devices(ModelId);
+            CREATE INDEX IF NOT EXISTS idx_devices_instanceid ON Devices(InstanceId);
+            CREATE INDEX IF NOT EXISTS idx_devices_status ON Devices(Status);
         ";
         await createCmd.ExecuteNonQueryAsync();
 
         using var countCmd = conn.CreateCommand();
-        countCmd.CommandText = "SELECT COUNT(*) FROM DeviceModels";
+        countCmd.CommandText = "SELECT COUNT(*) FROM Models";
         var count = (long)(await countCmd.ExecuteScalarAsync())!;
 
         if (count == 0)
@@ -85,48 +87,55 @@ public class SqliteDataSource : ISqliteDataSource
 
     private static async Task SeedAsync(SqliteConnection conn)
     {
-        string[] manufacturers = { "Samsung", "Apple", "Xiaomi", "OPPO", "Vivo", "Huawei", "Sony", "LG", "Nokia", "Google" };
-        string[] categories = { "Smartphone", "Tablet", "Wearable", "Laptop", "Accessory" };
-        string[][] subCategories =
-        {
-            new[] { "Flagship", "Mid-range", "Budget", "Foldable" },
-            new[] { "Standard", "Pro", "Mini" },
-            new[] { "Smartwatch", "Band", "Earbuds" },
-            new[] { "Ultrabook", "Gaming", "Workstation" },
-            new[] { "Case", "Charger", "Cable", "Screen Protector" }
-        };
+        var baseDir = AppContext.BaseDirectory;
+        var sampleDataDir = Path.Combine(baseDir, "SampleData");
 
-        const int totalRecords = 2_500_000;
-        const int batchSize = 50_000;
-        var rng = new Random(42);
+        var modelsJson = await File.ReadAllTextAsync(Path.Combine(sampleDataDir, "dbModels.json"));
+        var devicesJson = await File.ReadAllTextAsync(Path.Combine(sampleDataDir, "dbDevices.json"));
+
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var models = JsonSerializer.Deserialize<JsonModel[]>(modelsJson, options) ?? [];
+        var devices = JsonSerializer.Deserialize<JsonDevice[]>(devicesJson, options) ?? [];
 
         using var tx = conn.BeginTransaction();
 
-        using var cmd = conn.CreateCommand();
-        cmd.Transaction = tx;
-
-        for (int batch = 0; batch < totalRecords; batch += batchSize)
+        foreach (var m in models)
         {
-            var sb = new System.Text.StringBuilder();
-            sb.Append("INSERT INTO DeviceModels (Model, Manufacturer, Category, SubCategory, Available, Reserved) VALUES ");
+            using var cmd = conn.CreateCommand();
+            cmd.Transaction = tx;
+            cmd.CommandText = @"
+                INSERT INTO Models (Id, Name, Manufacturer, Category, SubCategory, Available, Reserved)
+                VALUES (@id, @name, @mfr, @cat, @sub, @avail, 0)";
+            cmd.Parameters.AddWithValue("@id", m.Id);
+            cmd.Parameters.AddWithValue("@name", m.Name);
+            cmd.Parameters.AddWithValue("@mfr", m.Manufacturer);
+            cmd.Parameters.AddWithValue("@cat", m.Category);
+            cmd.Parameters.AddWithValue("@sub", m.SubCategory);
+            cmd.Parameters.AddWithValue("@avail", m.Available);
+            await cmd.ExecuteNonQueryAsync();
+        }
 
-            int end = Math.Min(batch + batchSize, totalRecords);
-            for (int i = batch; i < end; i++)
-            {
-                if (i > batch) sb.Append(',');
-                var mfr = manufacturers[rng.Next(manufacturers.Length)];
-                var catIdx = rng.Next(categories.Length);
-                var cat = categories[catIdx];
-                var subCat = subCategories[catIdx][rng.Next(subCategories[catIdx].Length)];
-                var modelName = $"{mfr}-{cat[..3]}-{i + 1:D7}";
-                var avail = rng.Next(1, 20);
-                sb.Append($"('{modelName}','{mfr}','{cat}','{subCat}',{avail},0)");
-            }
-
-            cmd.CommandText = sb.ToString();
+        foreach (var d in devices)
+        {
+            using var cmd = conn.CreateCommand();
+            cmd.Transaction = tx;
+            cmd.CommandText = @"
+                INSERT INTO Devices (Id, ModelId, Name, IMEI, SerialLab, SerialNumber, CircuitSerialNumber, HWVersion)
+                VALUES (@id, @modelId, @name, @imei, @serialLab, @serial, @circuit, @hw)";
+            cmd.Parameters.AddWithValue("@id", d.Id);
+            cmd.Parameters.AddWithValue("@modelId", d.ModelId);
+            cmd.Parameters.AddWithValue("@name", d.Name);
+            cmd.Parameters.AddWithValue("@imei", d.IMEI);
+            cmd.Parameters.AddWithValue("@serialLab", d.SerialLab);
+            cmd.Parameters.AddWithValue("@serial", d.SerialNumber);
+            cmd.Parameters.AddWithValue("@circuit", d.CircuitSerialNumber);
+            cmd.Parameters.AddWithValue("@hw", d.HWVersion);
             await cmd.ExecuteNonQueryAsync();
         }
 
         tx.Commit();
     }
+
+    private record JsonModel(string Id, string Name, string Manufacturer, string Category, string SubCategory, int Available);
+    private record JsonDevice(string Id, string ModelId, string Name, string IMEI, string SerialLab, string SerialNumber, string CircuitSerialNumber, string HWVersion);
 }

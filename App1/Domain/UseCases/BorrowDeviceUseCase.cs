@@ -9,6 +9,6 @@ public class BorrowDeviceUseCase
 
     public BorrowDeviceUseCase(IDeviceModelRepository repo) => _repo = repo;
 
-    public Task<bool> ExecuteAsync(long modelId, int quantity, string instanceId)
+    public Task<bool> ExecuteAsync(string modelId, int quantity, string instanceId)
         => _repo.BorrowAsync(modelId, quantity, instanceId);
 }

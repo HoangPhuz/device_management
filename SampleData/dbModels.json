@@ -1,0 +1,18 @@
+[
+    {
+        "Id": "da4160e9-d22a-480b-982e-1c55b7d80873",
+        "Name": "AP13",
+        "Manufacturer": "Apple",
+        "Category": "Smartphone",
+        "SubCategory": "Flagship",
+        "Available": 10
+    },
+    {
+        "Id": "724381b5-6dcc-4d68-b608-f137686ec8bf",
+        "Name": "S22",
+        "Manufacturer": "Samsung",
+        "Category": "Smartphone",
+        "SubCategory": "Flagship",
+        "Available": 10
+    }
+]
