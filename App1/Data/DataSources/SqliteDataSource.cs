@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -89,48 +90,107 @@ public class SqliteDataSource : ISqliteDataSource
     {
         var baseDir = AppContext.BaseDirectory;
         var sampleDataDir = Path.Combine(baseDir, "SampleData");
-
-        var modelsJson = await File.ReadAllTextAsync(Path.Combine(sampleDataDir, "dbModels.json"));
-        var devicesJson = await File.ReadAllTextAsync(Path.Combine(sampleDataDir, "dbDevices.json"));
-
         var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
-        var models = JsonSerializer.Deserialize<JsonModel[]>(modelsJson, options) ?? [];
-        var devices = JsonSerializer.Deserialize<JsonDevice[]>(devicesJson, options) ?? [];
 
-        using var tx = conn.BeginTransaction();
+        using var bulkPragma = conn.CreateCommand();
+        bulkPragma.CommandText = "PRAGMA temp_store = MEMORY; PRAGMA cache_size = -64000;";
+        await bulkPragma.ExecuteNonQueryAsync();
 
-        foreach (var m in models)
+        await SeedModelsAsync(conn, Path.Combine(sampleDataDir, "dbModels.json"), options);
+        await SeedDevicesAsync(conn, Path.Combine(sampleDataDir, "dbDevices.json"), options);
+    }
+
+    private const int BatchSize = 5000;
+
+    private static async Task SeedModelsAsync(SqliteConnection conn, string filePath, JsonSerializerOptions options)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+            INSERT INTO Models (Id, Name, Manufacturer, Category, SubCategory, Available, Reserved)
+            VALUES (@id, @name, @mfr, @cat, @sub, @avail, 0)";
+
+        var pId   = cmd.Parameters.Add("@id", SqliteType.Text);
+        var pName = cmd.Parameters.Add("@name", SqliteType.Text);
+        var pMfr  = cmd.Parameters.Add("@mfr", SqliteType.Text);
+        var pCat  = cmd.Parameters.Add("@cat", SqliteType.Text);
+        var pSub  = cmd.Parameters.Add("@sub", SqliteType.Text);
+        var pAvl  = cmd.Parameters.Add("@avail", SqliteType.Integer);
+
+        await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read,
+            FileShare.Read, bufferSize: 81920, useAsync: true);
+
+        var tx = conn.BeginTransaction();
+        cmd.Transaction = tx;
+        cmd.Prepare();
+
+        int count = 0;
+        await foreach (var m in JsonSerializer.DeserializeAsyncEnumerable<JsonModel>(stream, options))
         {
-            using var cmd = conn.CreateCommand();
-            cmd.Transaction = tx;
-            cmd.CommandText = @"
-                INSERT INTO Models (Id, Name, Manufacturer, Category, SubCategory, Available, Reserved)
-                VALUES (@id, @name, @mfr, @cat, @sub, @avail, 0)";
-            cmd.Parameters.AddWithValue("@id", m.Id);
-            cmd.Parameters.AddWithValue("@name", m.Name);
-            cmd.Parameters.AddWithValue("@mfr", m.Manufacturer);
-            cmd.Parameters.AddWithValue("@cat", m.Category);
-            cmd.Parameters.AddWithValue("@sub", m.SubCategory);
-            cmd.Parameters.AddWithValue("@avail", m.Available);
+            if (m is null) continue;
+
+            pId.Value   = m.Id;
+            pName.Value = m.Name;
+            pMfr.Value  = m.Manufacturer;
+            pCat.Value  = m.Category;
+            pSub.Value  = m.SubCategory;
+            pAvl.Value  = m.Available;
             await cmd.ExecuteNonQueryAsync();
+
+            if (++count % BatchSize == 0)
+            {
+                tx.Commit();
+                tx = conn.BeginTransaction();
+                cmd.Transaction = tx;
+            }
         }
 
-        foreach (var d in devices)
+        tx.Commit();
+    }
+
+    private static async Task SeedDevicesAsync(SqliteConnection conn, string filePath, JsonSerializerOptions options)
+    {
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
+            INSERT INTO Devices (Id, ModelId, Name, IMEI, SerialLab, SerialNumber, CircuitSerialNumber, HWVersion)
+            VALUES (@id, @modelId, @name, @imei, @serialLab, @serial, @circuit, @hw)";
+
+        var pId      = cmd.Parameters.Add("@id", SqliteType.Text);
+        var pModelId = cmd.Parameters.Add("@modelId", SqliteType.Text);
+        var pName    = cmd.Parameters.Add("@name", SqliteType.Text);
+        var pImei    = cmd.Parameters.Add("@imei", SqliteType.Text);
+        var pSLab    = cmd.Parameters.Add("@serialLab", SqliteType.Text);
+        var pSerial  = cmd.Parameters.Add("@serial", SqliteType.Text);
+        var pCircuit = cmd.Parameters.Add("@circuit", SqliteType.Text);
+        var pHw      = cmd.Parameters.Add("@hw", SqliteType.Text);
+
+        await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read,
+            FileShare.Read, bufferSize: 81920, useAsync: true);
+
+        var tx = conn.BeginTransaction();
+        cmd.Transaction = tx;
+        cmd.Prepare();
+
+        int count = 0;
+        await foreach (var d in JsonSerializer.DeserializeAsyncEnumerable<JsonDevice>(stream, options))
         {
-            using var cmd = conn.CreateCommand();
-            cmd.Transaction = tx;
-            cmd.CommandText = @"
-                INSERT INTO Devices (Id, ModelId, Name, IMEI, SerialLab, SerialNumber, CircuitSerialNumber, HWVersion)
-                VALUES (@id, @modelId, @name, @imei, @serialLab, @serial, @circuit, @hw)";
-            cmd.Parameters.AddWithValue("@id", d.Id);
-            cmd.Parameters.AddWithValue("@modelId", d.ModelId);
-            cmd.Parameters.AddWithValue("@name", d.Name);
-            cmd.Parameters.AddWithValue("@imei", d.IMEI);
-            cmd.Parameters.AddWithValue("@serialLab", d.SerialLab);
-            cmd.Parameters.AddWithValue("@serial", d.SerialNumber);
-            cmd.Parameters.AddWithValue("@circuit", d.CircuitSerialNumber);
-            cmd.Parameters.AddWithValue("@hw", d.HWVersion);
+            if (d is null) continue;
+
+            pId.Value      = d.Id;
+            pModelId.Value = d.ModelId;
+            pName.Value    = d.Name;
+            pImei.Value    = d.IMEI;
+            pSLab.Value    = d.SerialLab;
+            pSerial.Value  = d.SerialNumber;
+            pCircuit.Value = d.CircuitSerialNumber;
+            pHw.Value      = d.HWVersion;
             await cmd.ExecuteNonQueryAsync();
+
+            if (++count % BatchSize == 0)
+            {
+                tx.Commit();
+                tx = conn.BeginTransaction();
+                cmd.Transaction = tx;
+            }
         }
 
         tx.Commit();
