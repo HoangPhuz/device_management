@@ -18,6 +18,7 @@ public sealed partial class RequestDevicePage : Page
     private ComboBox? _categoryComboBox;
     private ComboBox? _subCategoryComboBox;
     private bool _suppressFilterEvents;
+    private bool _isLoadingData;
     private bool _isLoaded;
 
     private static readonly SolidColorBrush RowEven = new(Colors.White);
@@ -27,7 +28,20 @@ public sealed partial class RequestDevicePage : Page
     {
         _vm = App.Services.GetRequiredService<RequestDeviceViewModel>();
         _vm.SetDispatcher(DispatcherQueue);
+        _vm.PropertyChanged += OnViewModelPropertyChanged;
         InitializeComponent();
+    }
+
+    private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(RequestDeviceViewModel.Items))
+        {
+            ModelDataGrid.ItemsSource = _vm.Items;
+            if (!_isLoadingData)
+            {
+                UpdatePaginationUI();
+            }
+        }
     }
 
     private async void Page_Loaded(object sender, RoutedEventArgs e)
@@ -148,23 +162,45 @@ public sealed partial class RequestDevicePage : Page
 
     private async void ClearFilter_Click(object sender, RoutedEventArgs e)
     {
+        _suppressFilterEvents = true;
+
         _vm.ClearFilters();
         await _vm.LoadCategoriesAsync();
         PopulateCategoryComboBox();
         PopulateSubCategoryComboBox();
 
-        ClearFilterTextBoxes();
+        // Clear all TextBoxes & ComboBoxes inside DataGrid column headers
+        foreach (var col in ModelDataGrid.Columns)
+        {
+            col.SortDirection = null;
+        }
+        ClearFilterControlsInVisualTree(ModelDataGrid);
+
+        _suppressFilterEvents = false;
 
         await _vm.LoadDataAsync();
         UpdatePaginationUI();
         ModelDataGrid.ItemsSource = _vm.Items;
     }
 
-    private void ClearFilterTextBoxes()
+    private static void ClearFilterControlsInVisualTree(DependencyObject parent)
     {
-        foreach (var col in ModelDataGrid.Columns)
+        int count = VisualTreeHelper.GetChildrenCount(parent);
+        for (int i = 0; i < count; i++)
         {
-            col.SortDirection = null;
+            var child = VisualTreeHelper.GetChild(parent, i);
+            if (child is TextBox tb && tb.Tag is string)
+            {
+                tb.Text = string.Empty;
+            }
+            else if (child is ComboBox cb && cb.Items.Count > 0)
+            {
+                cb.SelectedIndex = 0;
+            }
+            else
+            {
+                ClearFilterControlsInVisualTree(child);
+            }
         }
     }
 
@@ -537,8 +573,16 @@ public sealed partial class RequestDevicePage : Page
         if (!_isLoaded) return;
         if (PageSizeComboBox?.SelectedItem is ComboBoxItem item && int.TryParse(item.Tag as string, out int size))
         {
+            _isLoadingData = true;
+            FirstBtn.IsEnabled = false;
+            PrevBtn.IsEnabled = false;
+            NextBtn.IsEnabled = false;
+            LastBtn.IsEnabled = false;
+
             _vm.SetPageSize(size);
             await _vm.LoadDataAsync();
+
+            _isLoadingData = false;
             UpdatePaginationUI();
             ModelDataGrid.ItemsSource = _vm.Items;
         }
@@ -546,6 +590,12 @@ public sealed partial class RequestDevicePage : Page
 
     public async void SetPageSize(int size)
     {
+        _isLoadingData = true;
+        FirstBtn.IsEnabled = false;
+        PrevBtn.IsEnabled = false;
+        NextBtn.IsEnabled = false;
+        LastBtn.IsEnabled = false;
+
         _vm.SetPageSize(size);
 
         if (PageSizeComboBox != null)
@@ -560,8 +610,10 @@ public sealed partial class RequestDevicePage : Page
             }
         }
 
-        if (!_isLoaded) return;
+        if (!_isLoaded) { _isLoadingData = false; return; }
         await _vm.LoadDataAsync();
+
+        _isLoadingData = false;
         UpdatePaginationUI();
         ModelDataGrid.ItemsSource = _vm.Items;
     }

@@ -1,3 +1,6 @@
 App1/.vs/
 App1/bin/
 App1/obj/
+
+SampleData/dbDevices.json
+SampleData/dbModels.json

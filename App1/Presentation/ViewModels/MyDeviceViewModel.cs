@@ -102,13 +102,13 @@ public partial class MyDeviceViewModel : ObservableObject
 
         var result = await _getDevices.ExecuteAsync(query, App.InstanceId);
 
-        Items = new ObservableCollection<SelectableDevice>(
-            result.Items.Select(d => new SelectableDevice(d)));
         TotalRecords = result.TotalCount;
         TotalPages = result.TotalPages;
-
         NotifyPaginationProperties();
         GeneratePageNumbers();
+
+        Items = new ObservableCollection<SelectableDevice>(
+            result.Items.Select(d => new SelectableDevice(d)));
         OnPropertyChanged(nameof(HasSelection));
     }
 

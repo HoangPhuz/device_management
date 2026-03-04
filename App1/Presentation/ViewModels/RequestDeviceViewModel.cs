@@ -103,12 +103,12 @@ public partial class RequestDeviceViewModel : ObservableObject
 
         var result = await _getModels.ExecuteAsync(query);
 
-        Items = new ObservableCollection<DeviceModel>(result.Items);
         TotalRecords = result.TotalCount;
         TotalPages = result.TotalPages;
-
         NotifyPaginationProperties();
         GeneratePageNumbers();
+
+        Items = new ObservableCollection<DeviceModel>(result.Items);
     }
 
     public async Task<bool> BorrowAsync(string modelId, int quantity)
