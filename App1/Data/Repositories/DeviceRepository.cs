@@ -155,7 +155,8 @@ public class DeviceRepository : IDeviceRepository
             await resetCmd.ExecuteNonQueryAsync();
 
             tx.Commit();
-            await _modelRepo.RefreshCacheAsync();
+            foreach (var (modelId, count) in modelCounts)
+                _modelRepo.UpdateCachedModel(modelId, +count, -count);
             return true;
         }
         catch

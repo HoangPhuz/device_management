@@ -12,4 +12,5 @@ public interface IDeviceModelRepository
     Task<List<string>> GetDistinctSubCategoriesAsync(string? category = null);
     Task<bool> BorrowAsync(string modelId, int quantity, string instanceId);
     Task RefreshCacheAsync();
+    void UpdateCachedModel(string modelId, int availableDelta, int reservedDelta);
 }

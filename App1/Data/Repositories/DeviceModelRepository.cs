@@ -195,7 +195,7 @@ public class DeviceModelRepository : IDeviceModelRepository
             await decrCmd.ExecuteNonQueryAsync();
 
             tx.Commit();
-            _cache = null;
+            UpdateCachedModel(modelId, -deviceIds.Count, +deviceIds.Count);
             return true;
         }
         catch
@@ -209,5 +209,15 @@ public class DeviceModelRepository : IDeviceModelRepository
     {
         _cache = null;
         await EnsureCacheAsync();
+    }
+
+    public void UpdateCachedModel(string modelId, int availableDelta, int reservedDelta)
+    {
+        var model = _cache?.FirstOrDefault(m => m.Id == modelId);
+        if (model != null)
+        {
+            model.Available += availableDelta;
+            model.Reserved += reservedDelta;
+        }
     }
 }
