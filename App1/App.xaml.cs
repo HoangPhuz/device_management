@@ -59,6 +59,9 @@ public partial class App : Application
         var ds = Services.GetRequiredService<ISqliteDataSource>();
         await Task.Run(() => ds.InitializeAsync());
 
+        var modelRepo = Services.GetRequiredService<IDeviceModelRepository>();
+        await modelRepo.RefreshCacheAsync();
+
         var sync = Services.GetRequiredService<SyncService>();
         sync.StartListening();
 

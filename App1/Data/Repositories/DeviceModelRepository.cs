@@ -1,73 +1,46 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using App1.Data.Interfaces;
 using App1.Domain.Entities;
 using App1.Domain.Interfaces;
 using App1.Domain.ValueObjects;
-using Microsoft.Data.Sqlite;
 
 namespace App1.Data.Repositories;
 
 public class DeviceModelRepository : IDeviceModelRepository
 {
     private readonly ISqliteDataSource _ds;
+    private List<DeviceModel>? _cache;
+    private readonly SemaphoreSlim _cacheLock = new(1, 1);
 
     public DeviceModelRepository(ISqliteDataSource ds) => _ds = ds;
 
-    public async Task<PagedResult<DeviceModel>> GetPagedAsync(QueryParameters q)
+    private async Task<List<DeviceModel>> EnsureCacheAsync()
+    {
+        if (_cache != null) return _cache;
+        await _cacheLock.WaitAsync();
+        try
+        {
+            if (_cache != null) return _cache;
+            _cache = await Task.Run(LoadAllFromDb);
+            return _cache;
+        }
+        finally { _cacheLock.Release(); }
+    }
+
+    private List<DeviceModel> LoadAllFromDb()
     {
         using var conn = _ds.GetConnection();
-
-        var where = new StringBuilder();
-        var parameters = new List<SqliteParameter>();
-
-        foreach (var (key, value) in q.Filters)
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = "SELECT Id, Name, Manufacturer, Category, SubCategory, Available, Reserved FROM Models";
+        var list = new List<DeviceModel>();
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
         {
-            if (string.IsNullOrWhiteSpace(value)) continue;
-
-            if (key is "Category" or "SubCategory")
-            {
-                where.Append(where.Length == 0 ? " WHERE " : " AND ");
-                where.Append($"{key} = @{key}");
-                parameters.Add(new SqliteParameter($"@{key}", value));
-            }
-            else
-            {
-                where.Append(where.Length == 0 ? " WHERE " : " AND ");
-                where.Append($"{key} LIKE @{key}");
-                parameters.Add(new SqliteParameter($"@{key}", $"%{value}%"));
-            }
-        }
-
-        var whereClause = where.ToString();
-
-        var allowedSort = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-            { "Name", "Manufacturer", "Category", "SubCategory", "Available", "Reserved" };
-        var sortCol = allowedSort.Contains(q.SortColumn ?? "") ? q.SortColumn! : "Name";
-        var sortDir = q.SortAscending ? "ASC" : "DESC";
-
-        using var countCmd = conn.CreateCommand();
-        countCmd.CommandText = $"SELECT COUNT(*) FROM Models{whereClause}";
-        foreach (var p in parameters) countCmd.Parameters.Add(new SqliteParameter(p.ParameterName, p.Value));
-        var totalCount = Convert.ToInt32(await countCmd.ExecuteScalarAsync());
-
-        using var dataCmd = conn.CreateCommand();
-        dataCmd.CommandText = $@"
-            SELECT Id, Name, Manufacturer, Category, SubCategory, Available, Reserved
-            FROM Models{whereClause}
-            ORDER BY {sortCol} {sortDir}
-            LIMIT @pageSize OFFSET @offset";
-        foreach (var p in parameters) dataCmd.Parameters.Add(new SqliteParameter(p.ParameterName, p.Value));
-        dataCmd.Parameters.AddWithValue("@pageSize", q.PageSize);
-        dataCmd.Parameters.AddWithValue("@offset", (q.Page - 1) * q.PageSize);
-
-        var items = new List<DeviceModel>();
-        using var reader = await dataCmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
-        {
-            items.Add(new DeviceModel
+            list.Add(new DeviceModel
             {
                 Id = reader.GetString(0),
                 Name = reader.GetString(1),
@@ -78,44 +51,86 @@ public class DeviceModelRepository : IDeviceModelRepository
                 Reserved = reader.GetInt32(6)
             });
         }
+        return list;
+    }
+
+    public async Task<PagedResult<DeviceModel>> GetPagedAsync(QueryParameters q)
+    {
+        var all = await EnsureCacheAsync();
+        IEnumerable<DeviceModel> filtered = all;
+
+        foreach (var (key, value) in q.Filters)
+        {
+            if (string.IsNullOrWhiteSpace(value)) continue;
+            filtered = key switch
+            {
+                "Category" => filtered.Where(m =>
+                    m.Category.Equals(value, StringComparison.OrdinalIgnoreCase)),
+                "SubCategory" => filtered.Where(m =>
+                    m.SubCategory.Equals(value, StringComparison.OrdinalIgnoreCase)),
+                "Name" => filtered.Where(m =>
+                    m.Name.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "Manufacturer" => filtered.Where(m =>
+                    m.Manufacturer.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                _ => filtered
+            };
+        }
+
+        var filteredList = filtered.ToList();
+        var sorted = ApplySort(filteredList, q.SortColumn, q.SortAscending);
+        var paged = sorted.Skip((q.Page - 1) * q.PageSize).Take(q.PageSize).ToList();
 
         return new PagedResult<DeviceModel>
         {
-            Items = items,
-            TotalCount = totalCount,
+            Items = paged,
+            TotalCount = filteredList.Count,
             Page = q.Page,
             PageSize = q.PageSize
         };
     }
 
+    private static IEnumerable<DeviceModel> ApplySort(
+        List<DeviceModel> source, string? column, bool ascending)
+    {
+        var col = column ?? "Name";
+        if (ascending)
+        {
+            return col switch
+            {
+                "Name" => source.OrderBy(m => m.Name, StringComparer.OrdinalIgnoreCase),
+                "Manufacturer" => source.OrderBy(m => m.Manufacturer, StringComparer.OrdinalIgnoreCase),
+                "Category" => source.OrderBy(m => m.Category, StringComparer.OrdinalIgnoreCase),
+                "SubCategory" => source.OrderBy(m => m.SubCategory, StringComparer.OrdinalIgnoreCase),
+                "Available" => source.OrderBy(m => m.Available),
+                "Reserved" => source.OrderBy(m => m.Reserved),
+                _ => source.OrderBy(m => m.Name, StringComparer.OrdinalIgnoreCase)
+            };
+        }
+        return col switch
+        {
+            "Name" => source.OrderByDescending(m => m.Name, StringComparer.OrdinalIgnoreCase),
+            "Manufacturer" => source.OrderByDescending(m => m.Manufacturer, StringComparer.OrdinalIgnoreCase),
+            "Category" => source.OrderByDescending(m => m.Category, StringComparer.OrdinalIgnoreCase),
+            "SubCategory" => source.OrderByDescending(m => m.SubCategory, StringComparer.OrdinalIgnoreCase),
+            "Available" => source.OrderByDescending(m => m.Available),
+            "Reserved" => source.OrderByDescending(m => m.Reserved),
+            _ => source.OrderByDescending(m => m.Name, StringComparer.OrdinalIgnoreCase)
+        };
+    }
+
     public async Task<List<string>> GetDistinctCategoriesAsync()
     {
-        using var conn = _ds.GetConnection();
-        using var cmd = conn.CreateCommand();
-        cmd.CommandText = "SELECT DISTINCT Category FROM Models ORDER BY Category";
-        var result = new List<string>();
-        using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync()) result.Add(reader.GetString(0));
-        return result;
+        var all = await EnsureCacheAsync();
+        return all.Select(m => m.Category).Distinct().OrderBy(c => c).ToList();
     }
 
     public async Task<List<string>> GetDistinctSubCategoriesAsync(string? category = null)
     {
-        using var conn = _ds.GetConnection();
-        using var cmd = conn.CreateCommand();
-        if (string.IsNullOrEmpty(category))
-        {
-            cmd.CommandText = "SELECT DISTINCT SubCategory FROM Models ORDER BY SubCategory";
-        }
-        else
-        {
-            cmd.CommandText = "SELECT DISTINCT SubCategory FROM Models WHERE Category = @cat ORDER BY SubCategory";
-            cmd.Parameters.AddWithValue("@cat", category);
-        }
-        var result = new List<string>();
-        using var reader = await cmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync()) result.Add(reader.GetString(0));
-        return result;
+        var all = await EnsureCacheAsync();
+        var query = string.IsNullOrEmpty(category)
+            ? all.AsEnumerable()
+            : all.Where(m => m.Category == category);
+        return query.Select(m => m.SubCategory).Distinct().OrderBy(s => s).ToList();
     }
 
     public async Task<bool> BorrowAsync(string modelId, int quantity, string instanceId)
@@ -180,6 +195,7 @@ public class DeviceModelRepository : IDeviceModelRepository
             await decrCmd.ExecuteNonQueryAsync();
 
             tx.Commit();
+            _cache = null;
             return true;
         }
         catch
@@ -187,5 +203,11 @@ public class DeviceModelRepository : IDeviceModelRepository
             tx.Rollback();
             return false;
         }
+    }
+
+    public async Task RefreshCacheAsync()
+    {
+        _cache = null;
+        await EnsureCacheAsync();
     }
 }

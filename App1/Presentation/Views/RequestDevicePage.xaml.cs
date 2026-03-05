@@ -39,12 +39,6 @@ public sealed partial class RequestDevicePage : Page
                 ModelDataGrid.ItemsSource = _vm.Items;
                 UpdatePaginationUI();
                 break;
-            case nameof(RequestDeviceViewModel.IsLoading):
-                FirstBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoFirst;
-                PrevBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoPrevious;
-                NextBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoNext;
-                LastBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoLast;
-                break;
         }
     }
 
@@ -588,9 +582,9 @@ public sealed partial class RequestDevicePage : Page
             ? "No entries"
             : $"Showing {_vm.ShowingFrom} to {_vm.ShowingTo} of {_vm.TotalRecords:N0} entries";
 
-        FirstBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoFirst;
-        PrevBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoPrevious;
-        NextBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoNext;
-        LastBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoLast;
+        FirstBtn.IsEnabled = _vm.CanGoFirst;
+        PrevBtn.IsEnabled = _vm.CanGoPrevious;
+        NextBtn.IsEnabled = _vm.CanGoNext;
+        LastBtn.IsEnabled = _vm.CanGoLast;
     }
 }

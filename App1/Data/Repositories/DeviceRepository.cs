@@ -14,8 +14,13 @@ namespace App1.Data.Repositories;
 public class DeviceRepository : IDeviceRepository
 {
     private readonly ISqliteDataSource _ds;
+    private readonly IDeviceModelRepository _modelRepo;
 
-    public DeviceRepository(ISqliteDataSource ds) => _ds = ds;
+    public DeviceRepository(ISqliteDataSource ds, IDeviceModelRepository modelRepo)
+    {
+        _ds = ds;
+        _modelRepo = modelRepo;
+    }
 
     public async Task<PagedResult<Device>> GetPagedAsync(QueryParameters q, string instanceId)
     {
@@ -150,6 +155,7 @@ public class DeviceRepository : IDeviceRepository
             await resetCmd.ExecuteNonQueryAsync();
 
             tx.Commit();
+            await _modelRepo.RefreshCacheAsync();
             return true;
         }
         catch

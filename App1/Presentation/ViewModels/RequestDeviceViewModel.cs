@@ -68,7 +68,11 @@ public partial class RequestDeviceViewModel : ObservableObject
 
     private void OnSyncDataChanged()
     {
-        _dispatcher?.TryEnqueue(async () => await LoadDataAsync());
+        _dispatcher?.TryEnqueue(async () =>
+        {
+            await _getModels.RefreshAsync();
+            await LoadDataAsync();
+        });
     }
 
     public async Task LoadCategoriesAsync()
