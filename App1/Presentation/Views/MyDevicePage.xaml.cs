@@ -15,7 +15,6 @@ namespace App1.Presentation.Views;
 public sealed partial class MyDevicePage : Page
 {
     private readonly MyDeviceViewModel _vm;
-    private bool _isLoadingData;
     private bool _isLoaded;
 
     private static readonly SolidColorBrush RowEven = new(Colors.White);
@@ -31,13 +30,18 @@ public sealed partial class MyDevicePage : Page
 
     private void OnViewModelPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MyDeviceViewModel.Items))
+        switch (e.PropertyName)
         {
-            DeviceDataGrid.ItemsSource = _vm.Items;
-            if (!_isLoadingData)
-            {
+            case nameof(MyDeviceViewModel.Items):
+                DeviceDataGrid.ItemsSource = _vm.Items;
                 UpdatePaginationUI();
-            }
+                break;
+            case nameof(MyDeviceViewModel.IsLoading):
+                FirstBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoFirst;
+                PrevBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoPrevious;
+                NextBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoNext;
+                LastBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoLast;
+                break;
         }
     }
 
@@ -45,8 +49,6 @@ public sealed partial class MyDevicePage : Page
     {
         await _vm.LoadDataAsync();
         _isLoaded = true;
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private void FilterArea_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -72,8 +74,6 @@ public sealed partial class MyDevicePage : Page
 
         _vm.ApplyFilter();
         await _vm.LoadDataAsync();
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private void StatusComboBox_Loaded(object sender, RoutedEventArgs e)
@@ -88,8 +88,6 @@ public sealed partial class MyDevicePage : Page
             _vm.FilterStatus = item.Tag as string ?? string.Empty;
             _vm.ApplyFilter();
             await _vm.LoadDataAsync();
-            UpdatePaginationUI();
-            DeviceDataGrid.ItemsSource = _vm.Items;
         }
     }
 
@@ -104,8 +102,6 @@ public sealed partial class MyDevicePage : Page
         ClearFilterControlsInVisualTree(DeviceDataGrid);
 
         await _vm.LoadDataAsync();
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private static void ClearFilterControlsInVisualTree(DependencyObject parent)
@@ -145,8 +141,6 @@ public sealed partial class MyDevicePage : Page
         {
             _vm.SetSort(colNames[idx], asc);
             await _vm.LoadDataAsync();
-            UpdatePaginationUI();
-            DeviceDataGrid.ItemsSource = _vm.Items;
         }
     }
 
@@ -310,8 +304,6 @@ public sealed partial class MyDevicePage : Page
         {
             await _vm.ReturnSelectedAsync();
             ReturnSelectedBtn.IsEnabled = false;
-            UpdatePaginationUI();
-            DeviceDataGrid.ItemsSource = _vm.Items;
         }
     }
 
@@ -320,32 +312,24 @@ public sealed partial class MyDevicePage : Page
     {
         _vm.GoToFirstCommand.Execute(null);
         await _vm.LoadDataAsync();
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private async void PrevPage_Click(object sender, RoutedEventArgs e)
     {
         _vm.GoToPreviousCommand.Execute(null);
         await _vm.LoadDataAsync();
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private async void NextPage_Click(object sender, RoutedEventArgs e)
     {
         _vm.GoToNextCommand.Execute(null);
         await _vm.LoadDataAsync();
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private async void LastPage_Click(object sender, RoutedEventArgs e)
     {
         _vm.GoToLastCommand.Execute(null);
         await _vm.LoadDataAsync();
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private async void PageNumber_Click(object sender, RoutedEventArgs e)
@@ -354,8 +338,6 @@ public sealed partial class MyDevicePage : Page
         {
             _vm.GoToPageCommand.Execute(pi.PageNumber.Value);
             await _vm.LoadDataAsync();
-            UpdatePaginationUI();
-            DeviceDataGrid.ItemsSource = _vm.Items;
         }
     }
 
@@ -364,29 +346,13 @@ public sealed partial class MyDevicePage : Page
         if (!_isLoaded) return;
         if (PageSizeComboBox?.SelectedItem is ComboBoxItem item && int.TryParse(item.Tag as string, out int size))
         {
-            _isLoadingData = true;
-            FirstBtn.IsEnabled = false;
-            PrevBtn.IsEnabled = false;
-            NextBtn.IsEnabled = false;
-            LastBtn.IsEnabled = false;
-
             _vm.SetPageSize(size);
             await _vm.LoadDataAsync();
-
-            _isLoadingData = false;
-            UpdatePaginationUI();
-            DeviceDataGrid.ItemsSource = _vm.Items;
         }
     }
 
     public async void SetPageSize(int size)
     {
-        _isLoadingData = true;
-        FirstBtn.IsEnabled = false;
-        PrevBtn.IsEnabled = false;
-        NextBtn.IsEnabled = false;
-        LastBtn.IsEnabled = false;
-
         _vm.SetPageSize(size);
 
         if (PageSizeComboBox != null)
@@ -401,12 +367,8 @@ public sealed partial class MyDevicePage : Page
             }
         }
 
-        if (!_isLoaded) { _isLoadingData = false; return; }
+        if (!_isLoaded) return;
         await _vm.LoadDataAsync();
-
-        _isLoadingData = false;
-        UpdatePaginationUI();
-        DeviceDataGrid.ItemsSource = _vm.Items;
     }
 
     private void UpdatePaginationUI()
@@ -417,9 +379,9 @@ public sealed partial class MyDevicePage : Page
             ? "No entries"
             : $"Showing {_vm.ShowingFrom} to {_vm.ShowingTo} of {_vm.TotalRecords:N0} entries";
 
-        FirstBtn.IsEnabled = _vm.CanGoFirst;
-        PrevBtn.IsEnabled = _vm.CanGoPrevious;
-        NextBtn.IsEnabled = _vm.CanGoNext;
-        LastBtn.IsEnabled = _vm.CanGoLast;
+        FirstBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoFirst;
+        PrevBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoPrevious;
+        NextBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoNext;
+        LastBtn.IsEnabled = !_vm.IsLoading && _vm.CanGoLast;
     }
 }

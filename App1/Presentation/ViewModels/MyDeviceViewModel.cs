@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using App1.Domain.Entities;
 using App1.Domain.UseCases;
@@ -62,6 +63,9 @@ public partial class MyDeviceViewModel : ObservableObject
 
     [ObservableProperty] private string? _sortColumn;
     [ObservableProperty] private bool _sortAscending = true;
+    [ObservableProperty] private bool _isLoading;
+
+    private CancellationTokenSource? _loadCts;
 
     public int ShowingFrom => TotalRecords == 0 ? 0 : (CurrentPage - 1) * PageSize + 1;
     public int ShowingTo => Math.Min(CurrentPage * PageSize, TotalRecords);
@@ -86,30 +90,46 @@ public partial class MyDeviceViewModel : ObservableObject
     [RelayCommand]
     public async Task LoadDataAsync()
     {
-        var query = new QueryParameters
+        _loadCts?.Cancel();
+        var cts = new CancellationTokenSource();
+        _loadCts = cts;
+
+        IsLoading = true;
+        try
         {
-            Page = CurrentPage,
-            PageSize = PageSize,
-            SortColumn = SortColumn,
-            SortAscending = SortAscending,
-            Filters = new Dictionary<string, string>()
-        };
+            var query = new QueryParameters
+            {
+                Page = CurrentPage,
+                PageSize = PageSize,
+                SortColumn = SortColumn,
+                SortAscending = SortAscending,
+                Filters = new Dictionary<string, string>()
+            };
 
-        if (!string.IsNullOrWhiteSpace(FilterName))
-            query.Filters["Name"] = FilterName;
-        if (!string.IsNullOrWhiteSpace(FilterStatus))
-            query.Filters["Status"] = FilterStatus;
+            if (!string.IsNullOrWhiteSpace(FilterName))
+                query.Filters["Name"] = FilterName;
+            if (!string.IsNullOrWhiteSpace(FilterStatus))
+                query.Filters["Status"] = FilterStatus;
 
-        var result = await _getDevices.ExecuteAsync(query, App.InstanceId);
+            var result = await Task.Run(() => _getDevices.ExecuteAsync(query, App.InstanceId));
 
-        TotalRecords = result.TotalCount;
-        TotalPages = result.TotalPages;
-        NotifyPaginationProperties();
-        GeneratePageNumbers();
+            if (cts.Token.IsCancellationRequested) return;
 
-        Items = new ObservableCollection<SelectableDevice>(
-            result.Items.Select(d => new SelectableDevice(d)));
-        OnPropertyChanged(nameof(HasSelection));
+            TotalRecords = result.TotalCount;
+            TotalPages = result.TotalPages;
+            NotifyPaginationProperties();
+            GeneratePageNumbers();
+
+            Items = new ObservableCollection<SelectableDevice>(
+                result.Items.Select(d => new SelectableDevice(d)));
+            OnPropertyChanged(nameof(HasSelection));
+        }
+        catch (OperationCanceledException) { }
+        finally
+        {
+            if (_loadCts == cts)
+                IsLoading = false;
+        }
     }
 
     public async Task<bool> ReturnSelectedAsync()
@@ -117,7 +137,7 @@ public partial class MyDeviceViewModel : ObservableObject
         var selectedIds = Items.Where(x => x.IsSelected).Select(x => x.Id).ToList();
         if (selectedIds.Count == 0) return false;
 
-        var success = await _return.ExecuteAsync(selectedIds);
+        var success = await Task.Run(() => _return.ExecuteAsync(selectedIds));
         if (success)
         {
             _sync.Broadcast();
