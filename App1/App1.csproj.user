@@ -8,9 +8,6 @@
     <Page Update="Style.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="MainPage.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <None Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </None>

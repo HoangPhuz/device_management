@@ -16,6 +16,7 @@ public class SyncService : IDisposable
     private CancellationTokenSource? _cts;
 
     public event Action? DataChanged;
+    public event Action? LocalDataChanged;
 
     public SyncService(string instanceId)
     {
@@ -69,6 +70,8 @@ public class SyncService : IDisposable
         {
             // Best effort broadcast
         }
+
+        LocalDataChanged?.Invoke();
     }
 
     public void Dispose()

@@ -49,6 +49,7 @@ public partial class MyDeviceViewModel : ObservableObject
         _return = returnDevice;
         _sync = sync;
         _sync.DataChanged += OnSyncDataChanged;
+        _sync.LocalDataChanged += OnLocalDataChanged;
     }
 
     [ObservableProperty] private ObservableCollection<SelectableDevice> _items = new();
@@ -94,6 +95,14 @@ public partial class MyDeviceViewModel : ObservableObject
         {
             await _getDevices.RefreshAsync(App.InstanceId);
             await LoadDataAsync();
+        });
+    }
+
+    private void OnLocalDataChanged()
+    {
+        _dispatcher?.TryEnqueue(async () =>
+        {
+            await _getDevices.RefreshAsync(App.InstanceId);
         });
     }
 
