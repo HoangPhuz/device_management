@@ -13,4 +13,6 @@ public class GetDevicesUseCase
 
     public Task<PagedResult<Device>> ExecuteAsync(QueryParameters query, string instanceId)
         => _repo.GetPagedAsync(query, instanceId);
+
+    public Task RefreshAsync(string instanceId) => _repo.RefreshCacheAsync(instanceId);
 }

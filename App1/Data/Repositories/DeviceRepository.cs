@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using App1.Data.Interfaces;
 using App1.Domain.Entities;
 using App1.Domain.Interfaces;
 using App1.Domain.ValueObjects;
-using Microsoft.Data.Sqlite;
 
 namespace App1.Data.Repositories;
 
@@ -15,6 +14,9 @@ public class DeviceRepository : IDeviceRepository
 {
     private readonly ISqliteDataSource _ds;
     private readonly IDeviceModelRepository _modelRepo;
+    private List<Device>? _cache;
+    private string? _cacheInstanceId;
+    private readonly SemaphoreSlim _cacheLock = new(1, 1);
 
     public DeviceRepository(ISqliteDataSource ds, IDeviceModelRepository modelRepo)
     {
@@ -22,61 +24,37 @@ public class DeviceRepository : IDeviceRepository
         _modelRepo = modelRepo;
     }
 
-    public async Task<PagedResult<Device>> GetPagedAsync(QueryParameters q, string instanceId)
+    private async Task<List<Device>> EnsureCacheAsync(string instanceId)
+    {
+        if (_cache != null && _cacheInstanceId == instanceId) return _cache;
+        await _cacheLock.WaitAsync();
+        try
+        {
+            if (_cache != null && _cacheInstanceId == instanceId) return _cache;
+            _cache = await Task.Run(() => LoadAllFromDb(instanceId));
+            _cacheInstanceId = instanceId;
+            return _cache;
+        }
+        finally { _cacheLock.Release(); }
+    }
+
+    private List<Device> LoadAllFromDb(string instanceId)
     {
         using var conn = _ds.GetConnection();
-
-        var where = new StringBuilder(" WHERE InstanceId = @inst AND Status = 'Occupied'");
-        var parameters = new List<SqliteParameter> { new("@inst", instanceId) };
-
-        foreach (var (key, value) in q.Filters)
-        {
-            if (string.IsNullOrWhiteSpace(value)) continue;
-
-            if (key == "Status")
-            {
-                where.Append($" AND Status = @{key}");
-                parameters.Add(new SqliteParameter($"@{key}", value));
-            }
-            else
-            {
-                where.Append($" AND {key} LIKE @{key}");
-                parameters.Add(new SqliteParameter($"@{key}", $"%{value}%"));
-            }
-        }
-
-        var whereClause = where.ToString();
-
-        var allowedSort = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "Name", "IMEI", "SerialLab", "SerialNumber", "CircuitSerialNumber",
-            "HWVersion", "BorrowedDate", "ReturnDate", "Invoice", "Status", "Inventory"
-        };
-        var sortCol = allowedSort.Contains(q.SortColumn ?? "") ? q.SortColumn! : "Name";
-        var sortDir = q.SortAscending ? "ASC" : "DESC";
-
-        using var countCmd = conn.CreateCommand();
-        countCmd.CommandText = $"SELECT COUNT(*) FROM Devices{whereClause}";
-        foreach (var p in parameters) countCmd.Parameters.Add(new SqliteParameter(p.ParameterName, p.Value));
-        var totalCount = Convert.ToInt32(await countCmd.ExecuteScalarAsync());
-
-        using var dataCmd = conn.CreateCommand();
-        dataCmd.CommandText = $@"
+        using var cmd = conn.CreateCommand();
+        cmd.CommandText = @"
             SELECT Id, ModelId, Name, IMEI, SerialLab, SerialNumber,
                    CircuitSerialNumber, HWVersion, Status, BorrowedDate,
                    ReturnDate, Invoice, Inventory, InstanceId
-            FROM Devices{whereClause}
-            ORDER BY {sortCol} {sortDir}
-            LIMIT @pageSize OFFSET @offset";
-        foreach (var p in parameters) dataCmd.Parameters.Add(new SqliteParameter(p.ParameterName, p.Value));
-        dataCmd.Parameters.AddWithValue("@pageSize", q.PageSize);
-        dataCmd.Parameters.AddWithValue("@offset", (q.Page - 1) * q.PageSize);
+            FROM Devices
+            WHERE InstanceId = @inst AND Status = 'Occupied'";
+        cmd.Parameters.AddWithValue("@inst", instanceId);
 
-        var items = new List<Device>();
-        using var reader = await dataCmd.ExecuteReaderAsync();
-        while (await reader.ReadAsync())
+        var list = new List<Device>();
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
         {
-            items.Add(new Device
+            list.Add(new Device
             {
                 Id = reader.GetString(0),
                 ModelId = reader.GetString(1),
@@ -94,14 +72,95 @@ public class DeviceRepository : IDeviceRepository
                 InstanceId = reader.GetString(13)
             });
         }
+        return list;
+    }
+
+    public async Task<PagedResult<Device>> GetPagedAsync(QueryParameters q, string instanceId)
+    {
+        var all = await EnsureCacheAsync(instanceId);
+        IEnumerable<Device> filtered = all;
+
+        foreach (var (key, value) in q.Filters)
+        {
+            if (string.IsNullOrWhiteSpace(value)) continue;
+            filtered = key switch
+            {
+                "Name" => filtered.Where(d =>
+                    d.Name.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "Status" => filtered.Where(d =>
+                    d.Status.Equals(value, StringComparison.OrdinalIgnoreCase)),
+                "IMEI" => filtered.Where(d =>
+                    d.IMEI.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "SerialLab" => filtered.Where(d =>
+                    d.SerialLab.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "SerialNumber" => filtered.Where(d =>
+                    d.SerialNumber.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "CircuitSerialNumber" => filtered.Where(d =>
+                    d.CircuitSerialNumber.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "HWVersion" => filtered.Where(d =>
+                    d.HWVersion.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                "Inventory" => filtered.Where(d =>
+                    d.Inventory.Contains(value, StringComparison.OrdinalIgnoreCase)),
+                _ => filtered
+            };
+        }
+
+        var filteredList = filtered.ToList();
+        var sorted = ApplySort(filteredList, q.SortColumn, q.SortAscending);
+        var paged = sorted.Skip((q.Page - 1) * q.PageSize).Take(q.PageSize).ToList();
 
         return new PagedResult<Device>
         {
-            Items = items,
-            TotalCount = totalCount,
+            Items = paged,
+            TotalCount = filteredList.Count,
             Page = q.Page,
             PageSize = q.PageSize
         };
+    }
+
+    private static IEnumerable<Device> ApplySort(List<Device> source, string? column, bool ascending)
+    {
+        var col = column ?? "Name";
+        if (ascending)
+        {
+            return col switch
+            {
+                "Name" => source.OrderBy(d => d.Name, StringComparer.OrdinalIgnoreCase),
+                "IMEI" => source.OrderBy(d => d.IMEI, StringComparer.OrdinalIgnoreCase),
+                "SerialLab" => source.OrderBy(d => d.SerialLab, StringComparer.OrdinalIgnoreCase),
+                "SerialNumber" => source.OrderBy(d => d.SerialNumber, StringComparer.OrdinalIgnoreCase),
+                "CircuitSerialNumber" => source.OrderBy(d => d.CircuitSerialNumber, StringComparer.OrdinalIgnoreCase),
+                "HWVersion" => source.OrderBy(d => d.HWVersion, StringComparer.OrdinalIgnoreCase),
+                "BorrowedDate" => source.OrderBy(d => d.BorrowedDate, StringComparer.OrdinalIgnoreCase),
+                "ReturnDate" => source.OrderBy(d => d.ReturnDate, StringComparer.OrdinalIgnoreCase),
+                "Invoice" => source.OrderBy(d => d.Invoice, StringComparer.OrdinalIgnoreCase),
+                "Status" => source.OrderBy(d => d.Status, StringComparer.OrdinalIgnoreCase),
+                "Inventory" => source.OrderBy(d => d.Inventory, StringComparer.OrdinalIgnoreCase),
+                _ => source.OrderBy(d => d.Name, StringComparer.OrdinalIgnoreCase)
+            };
+        }
+        return col switch
+        {
+            "Name" => source.OrderByDescending(d => d.Name, StringComparer.OrdinalIgnoreCase),
+            "IMEI" => source.OrderByDescending(d => d.IMEI, StringComparer.OrdinalIgnoreCase),
+            "SerialLab" => source.OrderByDescending(d => d.SerialLab, StringComparer.OrdinalIgnoreCase),
+            "SerialNumber" => source.OrderByDescending(d => d.SerialNumber, StringComparer.OrdinalIgnoreCase),
+            "CircuitSerialNumber" => source.OrderByDescending(d => d.CircuitSerialNumber, StringComparer.OrdinalIgnoreCase),
+            "HWVersion" => source.OrderByDescending(d => d.HWVersion, StringComparer.OrdinalIgnoreCase),
+            "BorrowedDate" => source.OrderByDescending(d => d.BorrowedDate, StringComparer.OrdinalIgnoreCase),
+            "ReturnDate" => source.OrderByDescending(d => d.ReturnDate, StringComparer.OrdinalIgnoreCase),
+            "Invoice" => source.OrderByDescending(d => d.Invoice, StringComparer.OrdinalIgnoreCase),
+            "Status" => source.OrderByDescending(d => d.Status, StringComparer.OrdinalIgnoreCase),
+            "Inventory" => source.OrderByDescending(d => d.Inventory, StringComparer.OrdinalIgnoreCase),
+            _ => source.OrderByDescending(d => d.Name, StringComparer.OrdinalIgnoreCase)
+        };
+    }
+
+    public async Task RefreshCacheAsync(string instanceId)
+    {
+        _cache = null;
+        _cacheInstanceId = null;
+        await EnsureCacheAsync(instanceId);
     }
 
     public async Task<bool> ReturnAsync(List<string> deviceIds)
@@ -155,8 +214,12 @@ public class DeviceRepository : IDeviceRepository
             await resetCmd.ExecuteNonQueryAsync();
 
             tx.Commit();
+
             foreach (var (modelId, count) in modelCounts)
                 _modelRepo.UpdateCachedModel(modelId, +count, -count);
+
+            RemoveFromCache(deviceIds);
+
             return true;
         }
         catch
@@ -164,5 +227,18 @@ public class DeviceRepository : IDeviceRepository
             tx.Rollback();
             return false;
         }
+    }
+
+    private void RemoveFromCache(List<string> deviceIds)
+    {
+        if (_cache == null) return;
+        var idsSet = new HashSet<string>(deviceIds);
+        _cache.RemoveAll(d => idsSet.Contains(d.Id));
+    }
+
+    public void AddToCache(Device device)
+    {
+        if (_cache == null || _cacheInstanceId != device.InstanceId) return;
+        _cache.Add(device);
     }
 }

@@ -64,7 +64,16 @@ public sealed partial class MyDevicePage : Page
         try { await System.Threading.Tasks.Task.Delay(300, token); }
         catch (System.Threading.Tasks.TaskCanceledException) { return; }
 
-        if (tag == "Name") _vm.FilterName = tb.Text;
+        switch (tag)
+        {
+            case "Name": _vm.FilterName = tb.Text; break;
+            case "IMEI": _vm.FilterIMEI = tb.Text; break;
+            case "SerialLab": _vm.FilterSerialLab = tb.Text; break;
+            case "SerialNumber": _vm.FilterSerialNumber = tb.Text; break;
+            case "CircuitSerialNumber": _vm.FilterCircuitSerialNumber = tb.Text; break;
+            case "HWVersion": _vm.FilterHWVersion = tb.Text; break;
+            case "Inventory": _vm.FilterInventory = tb.Text; break;
+        }
 
         _vm.ApplyFilter();
         await _vm.LoadDataAsync();
@@ -326,9 +335,9 @@ public sealed partial class MyDevicePage : Page
         await _vm.LoadDataAsync();
     }
 
-    private async void PageNumber_Click(object sender, RoutedEventArgs e)
+    private async void PageNumber_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        if (sender is Button btn && btn.DataContext is PageItem pi && pi.PageNumber.HasValue)
+        if (sender is Border border && border.DataContext is PageItem pi && pi.PageNumber.HasValue)
         {
             _vm.GoToPageCommand.Execute(pi.PageNumber.Value);
             await _vm.LoadDataAsync();

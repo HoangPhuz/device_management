@@ -535,9 +535,9 @@ public sealed partial class RequestDevicePage : Page
         await _vm.LoadDataAsync();
     }
 
-    private async void PageNumber_Click(object sender, RoutedEventArgs e)
+    private async void PageNumber_Tapped(object sender, TappedRoutedEventArgs e)
     {
-        if (sender is Button btn && btn.DataContext is PageItem pi && pi.PageNumber.HasValue)
+        if (sender is Border border && border.DataContext is PageItem pi && pi.PageNumber.HasValue)
         {
             _vm.GoToPageCommand.Execute(pi.PageNumber.Value);
             await _vm.LoadDataAsync();

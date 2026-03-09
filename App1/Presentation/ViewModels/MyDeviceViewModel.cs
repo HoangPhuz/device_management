@@ -59,6 +59,12 @@ public partial class MyDeviceViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<PageItem> _pageNumbers = new();
 
     [ObservableProperty] private string _filterName = string.Empty;
+    [ObservableProperty] private string _filterIMEI = string.Empty;
+    [ObservableProperty] private string _filterSerialLab = string.Empty;
+    [ObservableProperty] private string _filterSerialNumber = string.Empty;
+    [ObservableProperty] private string _filterCircuitSerialNumber = string.Empty;
+    [ObservableProperty] private string _filterHWVersion = string.Empty;
+    [ObservableProperty] private string _filterInventory = string.Empty;
     [ObservableProperty] private string _filterStatus = string.Empty;
 
     [ObservableProperty] private string? _sortColumn;
@@ -84,7 +90,11 @@ public partial class MyDeviceViewModel : ObservableObject
 
     private void OnSyncDataChanged()
     {
-        _dispatcher?.TryEnqueue(async () => await LoadDataAsync());
+        _dispatcher?.TryEnqueue(async () =>
+        {
+            await _getDevices.RefreshAsync(App.InstanceId);
+            await LoadDataAsync();
+        });
     }
 
     [RelayCommand]
@@ -108,6 +118,18 @@ public partial class MyDeviceViewModel : ObservableObject
 
             if (!string.IsNullOrWhiteSpace(FilterName))
                 query.Filters["Name"] = FilterName;
+            if (!string.IsNullOrWhiteSpace(FilterIMEI))
+                query.Filters["IMEI"] = FilterIMEI;
+            if (!string.IsNullOrWhiteSpace(FilterSerialLab))
+                query.Filters["SerialLab"] = FilterSerialLab;
+            if (!string.IsNullOrWhiteSpace(FilterSerialNumber))
+                query.Filters["SerialNumber"] = FilterSerialNumber;
+            if (!string.IsNullOrWhiteSpace(FilterCircuitSerialNumber))
+                query.Filters["CircuitSerialNumber"] = FilterCircuitSerialNumber;
+            if (!string.IsNullOrWhiteSpace(FilterHWVersion))
+                query.Filters["HWVersion"] = FilterHWVersion;
+            if (!string.IsNullOrWhiteSpace(FilterInventory))
+                query.Filters["Inventory"] = FilterInventory;
             if (!string.IsNullOrWhiteSpace(FilterStatus))
                 query.Filters["Status"] = FilterStatus;
 
@@ -161,6 +183,12 @@ public partial class MyDeviceViewModel : ObservableObject
     public void ClearFilters()
     {
         FilterName = string.Empty;
+        FilterIMEI = string.Empty;
+        FilterSerialLab = string.Empty;
+        FilterSerialNumber = string.Empty;
+        FilterCircuitSerialNumber = string.Empty;
+        FilterHWVersion = string.Empty;
+        FilterInventory = string.Empty;
         FilterStatus = string.Empty;
         CurrentPage = 1;
     }
@@ -181,6 +209,11 @@ public partial class MyDeviceViewModel : ObservableObject
 
     public void SetPageSize(int size) { PageSize = size; CurrentPage = 1; }
 
+    partial void OnCurrentPageChanged(int value)
+    {
+        GeneratePageNumbers();
+    }
+
     private void NotifyPaginationProperties()
     {
         OnPropertyChanged(nameof(ShowingFrom));
@@ -193,24 +226,41 @@ public partial class MyDeviceViewModel : ObservableObject
 
     public void GeneratePageNumbers()
     {
-        var pages = new ObservableCollection<PageItem>();
         const int maxVisible = 5;
+        var count = Math.Min(TotalPages, maxVisible);
+        EnsurePageNumbersCount(count);
 
+        if (count == 0)
+        {
+            return;
+        }
+
+        int start;
+        int end;
         if (TotalPages <= maxVisible)
         {
-            for (int i = 1; i <= TotalPages; i++)
-                pages.Add(new PageItem { PageNumber = i, IsCurrent = i == CurrentPage });
+            start = 1;
+            end = TotalPages;
         }
         else
         {
-            int windowEnd = Math.Min(CurrentPage + 2, TotalPages);
-            int windowStart = Math.Max(1, windowEnd - 4);
-            windowEnd = Math.Min(windowStart + 4, TotalPages);
-
-            for (int i = windowStart; i <= windowEnd; i++)
-                pages.Add(new PageItem { PageNumber = i, IsCurrent = i == CurrentPage });
+            end = Math.Min(CurrentPage + 2, TotalPages);
+            start = Math.Max(1, end - 4);
+            end = Math.Min(start + 4, TotalPages);
         }
 
-        PageNumbers = pages;
+        for (int i = 0; i < count; i++)
+        {
+            var pageNumber = start + i;
+            var item = PageNumbers[i];
+            item.PageNumber = pageNumber;
+            item.IsCurrent = pageNumber == CurrentPage;
+        }
+    }
+
+    private void EnsurePageNumbersCount(int count)
+    {
+        while (PageNumbers.Count < count) PageNumbers.Add(new PageItem());
+        while (PageNumbers.Count > count) PageNumbers.RemoveAt(PageNumbers.Count - 1);
     }
 }

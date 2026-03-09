@@ -5,11 +5,28 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="using:CommunityToolkit.WinUI.UI.Controls"
     xmlns:primitives="using:CommunityToolkit.WinUI.UI.Controls.Primitives"
+    xmlns:conv="using:App1.Presentation.Converters"
     Loaded="Page_Loaded">
 
     <Page.Resources>
+        <SolidColorBrush x:Key="CurrentPageBgBrush" Color="#5E8283" />
+        <SolidColorBrush x:Key="CurrentPageFgBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="NormalPageBgBrush" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="NormalPageFgBrush" Color="#2C2C2C" />
+
+        <conv:BoolToBrushConverter
+            x:Key="IsCurrentToBackgroundBrushConverter"
+            TrueBrush="{StaticResource CurrentPageBgBrush}"
+            FalseBrush="{StaticResource NormalPageBgBrush}" />
+        <conv:BoolToBrushConverter
+            x:Key="IsCurrentToForegroundBrushConverter"
+            TrueBrush="{StaticResource CurrentPageFgBrush}"
+            FalseBrush="{StaticResource NormalPageFgBrush}" />
+
         <Style x:Key="WrapCellStyle" TargetType="TextBlock">
             <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Padding" Value="6,4" />
         </Style>
@@ -71,6 +88,13 @@
             VerticalGridLinesBrush="#DEDEDE"
             HorizontalScrollBarVisibility="Visible"
             VerticalScrollBarVisibility="Auto">
+
+            <controls:DataGrid.CellStyle>
+                <Style TargetType="controls:DataGridCell">
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                </Style>
+            </controls:DataGrid.CellStyle>
 
             <controls:DataGrid.Columns>
                 <!-- CheckBox -->
@@ -258,7 +282,7 @@
                                             <TextBlock Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="#337F94" Text="H/W Ver." />
                                             <Rectangle Grid.Row="1" Fill="LightGray" />
                                             <Grid Grid.Row="2" Background="White" Padding="4,0" PointerPressed="FilterArea_PointerPressed" >
-                                                <TextBox VerticalAlignment="Center" PlaceholderText="HW Ver" Tag="HWVer" TextChanged="FilterTextBox_TextChanged" />
+                                                <TextBox VerticalAlignment="Center" PlaceholderText="HW Ver" Tag="HWVersion" TextChanged="FilterTextBox_TextChanged" />
                                             </Grid>
                                         </Grid>
                                     </DataTemplate>
@@ -414,10 +438,20 @@
                         </ItemsRepeater.Layout>
                         <ItemsRepeater.ItemTemplate>
                             <DataTemplate>
-                                <Button MinWidth="28" MinHeight="28" HorizontalAlignment="Center"
-                                    Click="PageNumber_Click" Content="{Binding DisplayText}"
-                                    CornerRadius="14" FontSize="12" Padding="4,2"
-                                    IsEnabled="{Binding IsClickable}" />
+                                <Border
+                                    MinWidth="28" MinHeight="28"
+                                    CornerRadius="14"
+                                    Padding="4,2"
+                                    Background="{Binding IsCurrent, Converter={StaticResource IsCurrentToBackgroundBrushConverter}}"
+                                    IsHitTestVisible="{Binding IsClickable}"
+                                    Tapped="PageNumber_Tapped">
+                                    <TextBlock
+                                        Text="{Binding DisplayText}"
+                                        FontSize="12"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{Binding IsCurrent, Converter={StaticResource IsCurrentToForegroundBrushConverter}}" />
+                                </Border>
                             </DataTemplate>
                         </ItemsRepeater.ItemTemplate>
                     </ItemsRepeater>

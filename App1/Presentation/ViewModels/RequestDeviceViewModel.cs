@@ -179,6 +179,11 @@ public partial class RequestDeviceViewModel : ObservableObject
         CurrentPage = 1;
     }
 
+    partial void OnCurrentPageChanged(int value)
+    {
+        GeneratePageNumbers();
+    }
+
     private void NotifyPaginationProperties()
     {
         OnPropertyChanged(nameof(ShowingFrom));
@@ -191,33 +196,62 @@ public partial class RequestDeviceViewModel : ObservableObject
 
     public void GeneratePageNumbers()
     {
-        var pages = new ObservableCollection<PageItem>();
         const int maxVisible = 5;
+        var count = Math.Min(TotalPages, maxVisible);
+        EnsurePageNumbersCount(count);
 
+        if (count == 0)
+        {
+            return;
+        }
+
+        int start;
+        int end;
         if (TotalPages <= maxVisible)
         {
-            for (int i = 1; i <= TotalPages; i++)
-                pages.Add(new PageItem { PageNumber = i, IsCurrent = i == CurrentPage });
+            start = 1;
+            end = TotalPages;
         }
         else
         {
-            int windowEnd = Math.Min(CurrentPage + 2, TotalPages);
-            int windowStart = Math.Max(1, windowEnd - 4);
-            windowEnd = Math.Min(windowStart + 4, TotalPages);
-
-            for (int i = windowStart; i <= windowEnd; i++)
-                pages.Add(new PageItem { PageNumber = i, IsCurrent = i == CurrentPage });
+            end = Math.Min(CurrentPage + 2, TotalPages);
+            start = Math.Max(1, end - 4);
+            end = Math.Min(start + 4, TotalPages);
         }
 
-        PageNumbers = pages;
+        for (int i = 0; i < count; i++)
+        {
+            var pageNumber = start + i;
+            var item = PageNumbers[i];
+            item.PageNumber = pageNumber;
+            item.IsCurrent = pageNumber == CurrentPage;
+        }
+    }
+
+    private void EnsurePageNumbersCount(int count)
+    {
+        while (PageNumbers.Count < count) PageNumbers.Add(new PageItem());
+        while (PageNumbers.Count > count) PageNumbers.RemoveAt(PageNumbers.Count - 1);
     }
 }
 
-public class PageItem
+public partial class PageItem : ObservableObject
 {
-    public int? PageNumber { get; set; }
-    public bool IsCurrent { get; set; }
+    [ObservableProperty] private int? _pageNumber;
+    [ObservableProperty] private bool _isCurrent;
     public bool IsEllipsis => PageNumber == null;
     public string DisplayText => PageNumber?.ToString() ?? "...";
     public bool IsClickable => PageNumber != null && !IsCurrent;
+
+    partial void OnPageNumberChanged(int? value)
+    {
+        OnPropertyChanged(nameof(IsEllipsis));
+        OnPropertyChanged(nameof(DisplayText));
+        OnPropertyChanged(nameof(IsClickable));
+    }
+
+    partial void OnIsCurrentChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsClickable));
+    }
 }

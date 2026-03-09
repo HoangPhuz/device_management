@@ -9,4 +9,5 @@ public interface IDeviceRepository
 {
     Task<PagedResult<Device>> GetPagedAsync(QueryParameters query, string instanceId);
     Task<bool> ReturnAsync(List<string> deviceIds);
+    Task RefreshCacheAsync(string instanceId);
 }
